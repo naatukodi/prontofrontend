@@ -3,8 +3,8 @@
       "identityProviders": {
         "google": {
           "registration": {
-            "clientIdSettingName": "669047295965-a6gcf6qj34emn2ihmf7ahbqc4u8hd7mg.apps.googleusercontent.com",
-            "clientSecretSettingName": "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"
+            "clientIdSettingName": "GOOGLE_CLIENT_ID",
+            "clientSecretSettingName": "GOOGLE_CLIENT_SECRET"
           }
         }
       }
