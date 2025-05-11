@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatInputModule } from '@angular/material/input';
+import { Router } from '@angular/router';
 import {
   FormBuilder,
   FormGroup,
@@ -21,7 +22,8 @@ export class ValuationFormComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private svc: ClaimService
+    private svc: ClaimService,
+    private router: Router  
   ) {}
 
   ngOnInit() {
@@ -161,12 +163,13 @@ export class ValuationFormComponent implements OnInit {
     this.svc.create(payload).subscribe({
       next: res => {
         this.loading = false;
-        // navigate or show success
+        // Redirect to Dashboard (home)
+        this.router.navigate(['/']);
       },
       error: err => {
         this.loading = false;
         this.error = err.message || 'Save failed';
       }
-    });
+    }); 
   }
 }

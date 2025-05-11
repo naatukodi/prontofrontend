@@ -93,5 +93,23 @@
         font-size: 0.8rem;
       }
     }
+
+    @media (max-width: 600px) {
+        .app-toolbar {
+          flex-direction: column !important;  /* stack items vertically */
+          align-items: flex-start !important;
+          height: auto !important;            /* allow grow */
+          padding: 8px !important;
+        }
+      
+        .app-toolbar .app-title {
+          margin-bottom: 8px;  /* give title some breathing room */
+        }
+      
+        .app-toolbar button {
+          width: 100%;         /* each button full width */
+          margin: 4px 0 !important;
+        }
+    }
   }
   

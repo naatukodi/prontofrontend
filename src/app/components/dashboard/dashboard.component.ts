@@ -12,15 +12,15 @@ export class DashboardComponent implements OnInit {
   loading = true;
   error: string | null = null;
 
-  // you could also pull these from a user service or route params
-  private adjusterUserId = 'user-123';
+  // Drop the adjusterUserId entirely
   private status = 'Open';
 
   constructor(private claimService: ClaimService) {}
 
   ngOnInit(): void {
+    // Pass undefined for adjusterUserId, so only status is sent
     this.claimService
-      .getAll(this.adjusterUserId, this.status)
+      .getAll(undefined, this.status)
       .subscribe({
         next: data => {
           this.claims = data;
@@ -32,4 +32,4 @@ export class DashboardComponent implements OnInit {
         }
       });
   }
-} 
+}

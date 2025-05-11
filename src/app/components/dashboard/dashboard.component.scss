@@ -8,22 +8,16 @@
     margin: 0 auto;
 }
 
-/* lay out panels in a responsive grid */
 .dashboard-grid {
     display: grid;
+    grid-template-columns: 1fr;  /* <-- always one column */
     gap: 16px;
-    /* create as many columns of at least 280px as will fit, each stretching equally */
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-}
-
-/* ensure each panel fills its grid cell */
-.mat-expansion-panel {
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.12);
-    width: 100%;
+  }
+  
+  .mat-expansion-panel {
+    width: 100%;      /* fill the column */
     box-sizing: border-box;
-}
+  }
 
 /* header styles */
 .mat-expansion-panel-header {
