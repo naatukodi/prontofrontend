@@ -15,6 +15,7 @@ import { MatIconModule }      from '@angular/material/icon';
 import { MatDatepickerModule }from '@angular/material/datepicker';
 import { MatNativeDateModule }from '@angular/material/core';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 import { ValuationFormComponent } from './components/valuation-form/valuation-form.component';
 
@@ -36,6 +37,7 @@ import { ValuationFormComponent } from './components/valuation-form/valuation-fo
     MatButtonModule,
     MatIconModule,
     MatDatepickerModule,
+    MatCheckboxModule,
     MatNativeDateModule
   ],
   providers: [],
