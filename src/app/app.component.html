@@ -1,3 +1,23 @@
-<p> home</p>
+<mat-toolbar color="primary" class="app-toolbar">
+  <span class="app-title">Pronto</span>
+  <span class="spacer"></span>
+  <button mat-button routerLink="/">Dashboard</button>
+  <button mat-button routerLink="/valuation/new">New Valuation</button>
+</mat-toolbar>
 
+<!-- Hero section -->
+<section class="hero">
+  <div class="hero-content">
+    <h1>Pronto</h1>
+    <p>Your one-stop claims dashboard</p>
+  </div>
+</section>
+
+<!-- Routed pages render here -->
 <router-outlet></router-outlet>
+
+<footer class="app-footer">
+  <div class="footer-content">
+    Pronto 2025 — All rights reserved
+  </div>
+</footer>

@@ -1,0 +1,76 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <h2>New Valuation</h2>
+  
+    <mat-form-field>
+      <input matInput placeholder="Adjuster User ID" formControlName="adjusterUserId" required>
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput placeholder="Status" formControlName="status">
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput [matDatepicker]="picker" placeholder="Accident Date"
+             formControlName="accidentDate">
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput placeholder="Accident Location" formControlName="accidentLocation">
+    </mat-form-field>
+    <mat-form-field>
+      <input matInput placeholder="Policy Number" formControlName="policyNumber">
+    </mat-form-field>
+  
+    <fieldset formGroupName="stakeholder" class="nested-group">
+      <legend>Stakeholder</legend>
+      <mat-form-field><input matInput placeholder="Name" formControlName="name"></mat-form-field>
+      <mat-form-field><input matInput placeholder="Executive Name" formControlName="executiveName"></mat-form-field>
+      <mat-form-field><input matInput placeholder="Executive Contact" formControlName="executiveContact"></mat-form-field>
+      <mat-form-field><input matInput placeholder="Executive Whatsapp" formControlName="executiveWhatsapp"></mat-form-field>
+      <!-- similarly stakeholder.applicant if needed… -->
+    </fieldset>
+  
+    <!-- Documents array -->
+    <section formArrayName="documents">
+      <h3>Documents</h3>
+      <div *ngFor="let doc of documents.controls; let i=index" [formGroupName]="i" class="array-item">
+        <mat-form-field><input matInput placeholder="Type" formControlName="type"></mat-form-field>
+        <mat-form-field><input matInput placeholder="File Path" formControlName="filePath"></mat-form-field>
+        <button mat-icon-button color="warn" (click)="removeDocument(i)">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
+      <button mat-button (click)="addDocument()">+ Add Document</button>
+    </section>
+  
+    <!-- Components array -->
+    <section formArrayName="components">
+      <h3>Components</h3>
+      <div *ngFor="let comp of components.controls; let i=index" [formGroupName]="i" class="array-item">
+        <mat-form-field><input matInput type="number" placeholder="Type ID" formControlName="componentTypeId"></mat-form-field>
+        <mat-form-field><input matInput placeholder="Condition" formControlName="condition"></mat-form-field>
+        <mat-form-field><input matInput placeholder="Remarks" formControlName="remarks"></mat-form-field>
+        <button mat-icon-button color="warn" (click)="removeComponent(i)">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
+      <button mat-button (click)="addComponent()">+ Add Component</button>
+    </section>
+  
+    <!-- Workflow array -->
+    <section formArrayName="workflow">
+      <h3>Workflow Steps</h3>
+      <div *ngFor="let w of workflow.controls; let i=index" [formGroupName]="i" class="array-item">
+        <mat-form-field><input matInput type="number" placeholder="Template Step ID" formControlName="templateStepId"></mat-form-field>
+        <mat-form-field><input matInput placeholder="Assigned To" formControlName="assignedToRole"></mat-form-field>
+        <mat-form-field><input matInput placeholder="Status" formControlName="status"></mat-form-field>
+        <button mat-icon-button color="warn" (click)="removeWorkflow(i)"><mat-icon>delete</mat-icon></button>
+      </div>
+      <button mat-button (click)="addWorkflow()">+ Add Step</button>
+    </section>
+  
+    <button mat-raised-button color="primary" type="submit" [disabled]="loading">
+      {{ loading ? 'Saving…' : 'Save Valuation' }}
+    </button>
+    <div *ngIf="error" class="error">{{ error }}</div>
+  </form>
+  
