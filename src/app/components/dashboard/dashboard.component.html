@@ -1,0 +1,61 @@
+<mat-accordion *ngIf="!loading && !error" class="dashboard-grid">
+    <mat-expansion-panel *ngFor="let c of claims">
+        <mat-expansion-panel-header>
+            <mat-panel-title>
+                {{ c.policyNumber }} — {{ c.accidentLocation }} ({{ c.status }})
+            </mat-panel-title>
+            <mat-panel-description>
+                {{ c.accidentDate | date:'medium' }}
+            </mat-panel-description>
+        </mat-expansion-panel-header>
+
+        <!-- You can group sections with sub-panels or lists -->
+        <section>
+            <h4>Stakeholder</h4>
+            <p>Name: {{ c.stakeholder.name }}</p>
+            <p>Exec: {{ c.stakeholder.executiveName }} ({{ c.stakeholder.executiveContact }})</p>
+        </section>
+
+        <section>
+            <h4>Applicant</h4>
+            <p>{{ c.applicant.name }} — {{ c.applicant.contact }}</p>
+        </section>
+
+        <section>
+            <h4>Vehicle Details</h4>
+            <p>{{ c.vehicleDetails.make }} {{ c.vehicleDetails.model }} ({{ c.vehicleDetails.yearMfg }})</p>
+            <p>Reg No: {{ c.vehicleDetails.registrationNumber }}</p>
+            <p>IDV: {{ c.vehicleDetails.idv | currency }}</p>
+        </section>
+
+        <section>
+            <h4>Components</h4>
+            <ul>
+                <li *ngFor="let comp of c.components">
+                    Type {{ comp.componentTypeId }}: {{ comp.condition }} —
+                    {{ comp.remarks || 'No remarks' }}
+                </li>
+            </ul>
+        </section>
+
+        <section>
+            <h4>Summary</h4>
+            <p>Rating: {{ c.summary.overallRating }}</p>
+            <p>Valuation: {{ c.summary.valuationAmount | currency }}</p>
+            <p>Remarks: {{ c.summary.remarks }}</p>
+        </section>
+
+        <section>
+            <h4>Documents</h4>
+            <ul>
+                <li *ngFor="let doc of c.documents">
+                    <a [href]="doc.filePath" target="_blank">{{ doc.type }}</a>
+                    (uploaded: {{ doc.uploadedAt | date:'short' }})
+                </li>
+            </ul>
+        </section>
+    </mat-expansion-panel>
+</mat-accordion>
+
+<div *ngIf="loading">Loading claims…</div>
+<div *ngIf="error" class="error">{{ error }}</div>
