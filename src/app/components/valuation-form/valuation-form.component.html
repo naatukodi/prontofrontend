@@ -20,6 +20,29 @@
     <mat-form-field>
       <input matInput placeholder="Policy Number" formControlName="policyNumber" required>
     </mat-form-field>
+
+     <!-- Applicant group -->
+  <fieldset formGroupName="applicant" class="nested-group">
+    <legend>Applicant</legend>
+
+    <mat-form-field>
+      <input
+        matInput
+        placeholder="Name"
+        formControlName="name"
+        required
+      >
+    </mat-form-field>
+
+    <mat-form-field>
+      <input
+        matInput
+        placeholder="Contact"
+        formControlName="contact"
+        required
+      >
+    </mat-form-field>
+  </fieldset>
   
     <!-- Stakeholder group -->
     <fieldset formGroupName="stakeholder" class="nested-group">

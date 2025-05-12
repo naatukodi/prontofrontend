@@ -29,6 +29,11 @@ export class ValuationFormComponent implements OnInit {
       accidentLocation: ['', Validators.required],
       policyNumber: ['', Validators.required],
 
+      applicant: this.fb.group({
+        name: ['', Validators.required],
+        contact: ['', Validators.required]
+      }),
+
       stakeholder: this.fb.group({
         name: [''],
         executiveName: [''],
