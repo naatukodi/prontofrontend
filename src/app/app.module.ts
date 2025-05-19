@@ -16,11 +16,13 @@ import { MatDatepickerModule }from '@angular/material/datepicker';
 import { MatNativeDateModule }from '@angular/material/core';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatSelectModule } from '@angular/material/select';
 
 import { ValuationFormComponent } from './components/valuation-form/valuation-form.component';
+import { StakeholderUpdateComponent } from './components/stakeholder-update/stakeholder-update.component';
 
 @NgModule({
-  declarations: [AppComponent, DashboardComponent, ValuationFormComponent],
+  declarations: [AppComponent, DashboardComponent, ValuationFormComponent, StakeholderUpdateComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
@@ -35,10 +37,11 @@ import { ValuationFormComponent } from './components/valuation-form/valuation-fo
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
-    MatIconModule,
     MatDatepickerModule,
+    MatIconModule,
     MatCheckboxModule,
-    MatNativeDateModule
+    MatNativeDateModule,
+    MatSelectModule
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -32,4 +32,19 @@ export class ClaimService {
   create(v: Valuation): Observable<Valuation> {
     return this.http.post<Valuation>(this.apiUrl, v);
   }
+
+  /**
+   * Patch stakeholder for a valuation
+   * @param id Valuation ID
+   * @param stakeholderData Data to patch
+   */
+  patchStakeholder(id: string, stakeholderData?: any): Observable<any> {
+    const url = `${this.apiUrl}/${id}/stakeholder`;
+    if (stakeholderData instanceof FormData) {
+      return this.http.patch<any>(url, stakeholderData, {
+        headers: { }
+      });
+    }
+    return this.http.patch<any>(url, stakeholderData ?? {});
+  }
 }
