@@ -1,3 +1,4 @@
+<!-- src/app/dashboard/dashboard.component.html -->
 <mat-accordion *ngIf="!loading && !error" class="dashboard-grid">
   <mat-expansion-panel *ngFor="let v of claims">
     <mat-expansion-panel-header>
@@ -9,16 +10,19 @@
       </mat-panel-description>
     </mat-expansion-panel-header>
 
-    <!-- workflow tabs -->
-    <mat-tab-group
-      [selectedIndex]="getStepIndex(v)"
-      mat-stretch-tabs
-      class="workflow-tabs"
-    >
-      <mat-tab *ngFor="let step of steps" [label]="step">
-        <!-- optional: slot in step-specific content here -->
-      </mat-tab>
-    </mat-tab-group>
+    <!-- workflow buttons -->
+    <div class="workflow-buttons" style="display: flex; gap: 0.5rem; margin: 1rem 0;">
+      <button
+        mat-button
+        type="button"
+        *ngFor="let step of steps; let i = index"
+        [ngStyle]="getStepIndex(v) === i
+          ? {'background-color':'green','color':'white'}
+          : {'background-color':'lightgrey','color':'black'}"
+      >
+        {{ step }}
+      </button>
+    </div>
 
     <!-- applicant & contact -->
     <section class="mt-2">
