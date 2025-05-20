@@ -7,7 +7,7 @@ import { environment } from '../../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class StakeholderService {
-  private readonly baseUrl = `${environment.apiBaseUrl}/valuations`;
+  private readonly baseUrl = `${environment.apiBaseUrl}valuations`;
 
   constructor(private http: HttpClient) {}
 
@@ -50,4 +50,14 @@ export class StakeholderService {
       `&applicantContact=${encodeURIComponent(applicantContact)}`;
     return this.http.delete<void>(url);
   }
+
+  startWorkflow(id: string, vehicleNumber: string, applicantContact: string) {
+  const url = `${this.baseUrl}/${id}/workflow/1/start?vehicleNumber=${vehicleNumber}&applicantContact=${applicantContact}`;
+  return this.http.post(url, {});
+}
+
+completeWorkflow(id: string, vehicleNumber: string, applicantContact: string) {
+  const url = `${this.baseUrl}/${id}/workflow/1/complete?vehicleNumber=${vehicleNumber}&applicantContact=${applicantContact}`;
+  return this.http.post(url, {});
+}
 }

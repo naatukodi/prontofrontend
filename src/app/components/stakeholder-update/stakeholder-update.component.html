@@ -9,10 +9,7 @@
       <mat-form-field appearance="fill">
         <mat-label>Name of Stakeholder</mat-label>
         <mat-select formControlName="stakeholderName">
-          <mat-option
-            *ngFor="let opt of stakeholderOptions"
-            [value]="opt"
-          >
+          <mat-option *ngFor="let opt of stakeholderOptions" [value]="opt">
             {{ opt }}
           </mat-option>
         </mat-select>
@@ -20,34 +17,22 @@
 
       <mat-form-field appearance="fill">
         <mat-label>Executive Name</mat-label>
-        <input
-          matInput
-          formControlName="stakeholderExecutiveName"
-        />
+        <input matInput formControlName="stakeholderExecutiveName" />
       </mat-form-field>
 
       <mat-form-field appearance="fill">
         <mat-label>Contact Number</mat-label>
-        <input
-          matInput
-          formControlName="stakeholderExecutiveContact"
-        />
+        <input matInput formControlName="stakeholderExecutiveContact" />
       </mat-form-field>
 
       <mat-form-field appearance="fill">
         <mat-label>WhatsApp Number</mat-label>
-        <input
-          matInput
-          formControlName="stakeholderExecutiveWhatsapp"
-        />
+        <input matInput formControlName="stakeholderExecutiveWhatsapp" />
       </mat-form-field>
 
       <mat-form-field appearance="fill">
         <mat-label>Email ID</mat-label>
-        <input
-          matInput
-          formControlName="stakeholderExecutiveEmail"
-        />
+        <input matInput formControlName="stakeholderExecutiveEmail" />
       </mat-form-field>
     </div>
   </fieldset>
@@ -121,14 +106,29 @@
     </div>
   </fieldset>
 
+  <!-- Action Buttons -->
+  <div
+  class="button-group"
+  style="margin-top: 1rem; display: flex; gap: 1rem;"
+>
+  <button
+    mat-raised-button
+    color="accent"
+    type="button"
+    [disabled]="saving"
+    (click)="onSave()"
+  >
+    {{ saving && saveInProgress ? 'Saving…' : 'Save' }}
+  </button>
+
   <button
     mat-raised-button
     color="primary"
     type="submit"
     [disabled]="saving"
   >
-    {{ saving ? 'Saving…' : 'Submit' }}
+    {{ saving && submitInProgress ? 'Submitting…' : 'Submit' }}
   </button>
+</div>
 
-  <div *ngIf="error" class="error">{{ error }}</div>
 </form>
