@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router'; 
 import { ClaimService } from '../../services/claim.service';
 import { Valuation } from '../../models/valuation.model';
 
@@ -21,7 +22,10 @@ export class DashboardComponent implements OnInit {
     'FinalReport'
   ];
 
-  constructor(private claimService: ClaimService) {}
+  constructor(
+    private claimService: ClaimService,
+    private router: Router  
+  ) {}
 
   ngOnInit(): void {
     this.claimService
@@ -46,5 +50,18 @@ export class DashboardComponent implements OnInit {
     const role = v.inProgressWorkflow[0].assignedToRole;
     const idx  = this.steps.indexOf(role);
     return idx >= 0 ? idx : 0;
+  }
+
+  /** Navigate into the stakeholder view for this valuation */
+  goToStakeholder(v: Valuation) {
+    this.router.navigate(
+      ['/valuations', v.id, 'stakeholder'],
+      {
+        queryParams: {
+          vehicleNumber: v.vehicleNumber,
+          applicantContact: v.applicantContact
+        }
+      }
+    );
   }
 }

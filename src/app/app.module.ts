@@ -21,9 +21,10 @@ import { MatTabsModule } from '@angular/material/tabs';
 
 import { ValuationFormComponent } from './components/valuation-form/valuation-form.component';
 import { StakeholderUpdateComponent } from './components/stakeholder-update/stakeholder-update.component';
+import { StakeholderViewComponent } from './components/stakeholder-view/stakeholder-view.component';
 
 @NgModule({
-  declarations: [AppComponent, DashboardComponent, ValuationFormComponent, StakeholderUpdateComponent],
+  declarations: [AppComponent, DashboardComponent, ValuationFormComponent, StakeholderUpdateComponent, StakeholderViewComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
