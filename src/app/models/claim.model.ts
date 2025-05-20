@@ -65,22 +65,20 @@ export interface Stakeholder {
     completedAt: string | null;
   }
   
-  export interface Claim {
-    id: string;
-    adjusterUserId: string;
-    status: string;
-    accidentDate: string;
-    accidentLocation: string;
-    policyNumber: string;
-    stakeholder: Stakeholder;
-    applicant: Applicant;
-    vehicleDetails: VehicleDetails;
-    documents: Document[];
-    components: Component[];
-    summary: Summary;
-    workflow: WorkflowStep[];
-    createdAt: string;
-    updatedAt: string;
+ export interface Claim {
+  id: string;
+  vehicleNumber: string;
+  applicantName: string;
+  applicantContact: string;
+  createdAt: string;
+    inProgressWorkflow: Array<{
+      stepOrder: number;
+      templateStepId: number;
+      assignedToRole: string;
+      status: string;
+      startedAt: string | null;
+      completedAt: string | null;
+    }>;
   }
   
   export type Valuation = Claim;

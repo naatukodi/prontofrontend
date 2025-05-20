@@ -1,103 +1,32 @@
 <mat-accordion *ngIf="!loading && !error" class="dashboard-grid">
-    <mat-expansion-panel *ngFor="let c of claims">
-      <mat-expansion-panel-header>
-        <mat-panel-title>
-          {{ c.policyNumber }} — {{ c.accidentLocation }} ({{ c.status }})
-        </mat-panel-title>
-        <mat-panel-description>
-          {{ c.accidentDate | date:'medium' }}
-        </mat-panel-description>
-      </mat-expansion-panel-header>
-  
-      <!-- Stakeholder -->
-      <section *ngIf="c.stakeholder">
-        <h4>Stakeholder</h4>
-        <p>Name: {{ c.stakeholder.name || '—' }}</p>
-        <p>
-          Exec: {{ c.stakeholder.executiveName || '—' }}
-          ({{ c.stakeholder.executiveContact || '—' }})
-        </p>
-      </section>
-  
-      <!-- Applicant -->
-      <section *ngIf="c.applicant; else noApplicant">
-        <h4>Applicant</h4>
-        <p>
-          {{ c.applicant.name }} —
-          {{ c.applicant.contact }}
-        </p>
-      </section>
-      <ng-template #noApplicant>
-        <section>
-          <h4>Applicant</h4>
-          <p><em>No applicant data</em></p>
-        </section>
-      </ng-template>
-  
-      <!-- Vehicle Details -->
-      <section *ngIf="c.vehicleDetails; else noVehicle">
-        <h4>Vehicle Details</h4>
-        <p>
-          {{ c.vehicleDetails.make }}
-          {{ c.vehicleDetails.model }}
-          ({{ c.vehicleDetails.yearMfg }})
-        </p>
-        <p>Reg No: {{ c.vehicleDetails.registrationNumber }}</p>
-        <p>IDV: {{ c.vehicleDetails.idv | currency }}</p>
-      </section>
-      <ng-template #noVehicle>
-        <section>
-          <h4>Vehicle Details</h4>
-          <p><em>No vehicle details</em></p>
-        </section>
-      </ng-template>
-  
-      <!-- Components -->
-      <section *ngIf="c.components && c.components.length; else noComps">
-        <h4>Components</h4>
-        <ul>
-          <li *ngFor="let comp of c.components">
-            Type {{ comp.componentTypeId }}:
-            {{ comp.condition }} —
-            {{ comp.remarks || 'No remarks' }}
-          </li>
-        </ul>
-      </section>
-      <ng-template #noComps>
-        <section>
-          <h4>Components</h4>
-          <p><em>No components</em></p>
-        </section>
-      </ng-template>
-  
-      <!-- Summary -->
-      <section *ngIf="c.summary">
-        <h4>Summary</h4>
-        <p>Rating: {{ c.summary.overallRating }}</p>
-        <p>Valuation: {{ c.summary.valuationAmount | currency }}</p>
-        <p>Remarks: {{ c.summary.remarks || '—' }}</p>
-      </section>
-  
-      <!-- Documents -->
-      <section *ngIf="c.documents && c.documents.length; else noDocs">
-        <h4>Documents</h4>
-        <ul>
-          <li *ngFor="let doc of c.documents">
-            <a [href]="doc.filePath" target="_blank">{{ doc.type }}</a>
-            (uploaded: {{ doc.uploadedAt | date:'short' }})
-          </li>
-        </ul>
-      </section>
-      <ng-template #noDocs>
-        <section>
-          <h4>Documents</h4>
-          <p><em>No documents</em></p>
-        </section>
-      </ng-template>
-  
-    </mat-expansion-panel>
-  </mat-accordion>
-  
-  <div *ngIf="loading">Loading claims…</div>
-  <div *ngIf="error" class="error">{{ error }}</div>
-  
+  <mat-expansion-panel *ngFor="let v of claims">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        {{ v.vehicleNumber }} — {{ v.applicantName }}
+      </mat-panel-title>
+      <mat-panel-description>
+        {{ v.createdAt | date:'medium' }}
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+
+    <!-- workflow tabs -->
+    <mat-tab-group
+      [selectedIndex]="getStepIndex(v)"
+      mat-stretch-tabs
+      class="workflow-tabs"
+    >
+      <mat-tab *ngFor="let step of steps" [label]="step">
+        <!-- optional: slot in step-specific content here -->
+      </mat-tab>
+    </mat-tab-group>
+
+    <!-- applicant & contact -->
+    <section class="mt-2">
+      <h4>Applicant</h4>
+      <p>{{ v.applicantName }} — {{ v.applicantContact }}</p>
+    </section>
+  </mat-expansion-panel>
+</mat-accordion>
+
+<div *ngIf="loading">Loading valuations…</div>
+<div *ngIf="error" class="error">{{ error }}</div>

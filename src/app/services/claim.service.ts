@@ -29,6 +29,10 @@ export class ClaimService {
     return this.http.get<Claim[]>(this.apiUrl, { params });
   }
 
+  getOpenValuations(): Observable<Valuation[]> {
+    return this.http.get<Valuation[]>(`${this.apiUrl}/open`);
+  }
+
   create(v: Valuation): Observable<Valuation> {
     return this.http.post<Valuation>(this.apiUrl, v);
   }

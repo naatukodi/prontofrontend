@@ -17,6 +17,7 @@ import { MatNativeDateModule }from '@angular/material/core';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSelectModule } from '@angular/material/select';
+import { MatTabsModule } from '@angular/material/tabs';
 
 import { ValuationFormComponent } from './components/valuation-form/valuation-form.component';
 import { StakeholderUpdateComponent } from './components/stakeholder-update/stakeholder-update.component';
@@ -41,7 +42,8 @@ import { StakeholderUpdateComponent } from './components/stakeholder-update/stak
     MatIconModule,
     MatCheckboxModule,
     MatNativeDateModule,
-    MatSelectModule
+    MatSelectModule,
+    MatTabsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

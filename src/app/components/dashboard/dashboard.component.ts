@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ClaimService } from '../../services/claim.service';
-import { Claim } from '../../models/claim.model';
+import { Valuation } from '../../models/valuation.model';
 
 @Component({
   selector: 'app-dashboard',
@@ -8,28 +8,43 @@ import { Claim } from '../../models/claim.model';
   styleUrls: ['./dashboard.component.scss']
 })
 export class DashboardComponent implements OnInit {
-  claims: Claim[] = [];
+  claims: Valuation[] = [];
   loading = true;
   error: string | null = null;
 
-  // Drop the adjusterUserId entirely
-  private status = 'Open';
+  // define your five tabs in order:
+  steps = [
+    'Stakeholder',
+    'BackEnd',
+    'AVO',
+    'QC',
+    'FinalReport'
+  ];
 
   constructor(private claimService: ClaimService) {}
 
   ngOnInit(): void {
-    // Pass undefined for adjusterUserId, so only status is sent
     this.claimService
-      .getAll(undefined, this.status)
+      .getOpenValuations()     // ← hit /valuations/open
       .subscribe({
-        next: data => {
+        next: (data: Valuation[]) => {
           this.claims = data;
           this.loading = false;
         },
-        error: err => {
-          this.error = 'Failed to load claims';
+        error: () => {
+          this.error = 'Failed to load valuations';
           this.loading = false;
         }
       });
+  }
+
+  /**
+   * return the index of the in-progress step
+   */
+  getStepIndex(v: Valuation): number {
+    if (!v.inProgressWorkflow?.length) return 0;
+    const role = v.inProgressWorkflow[0].assignedToRole;
+    const idx  = this.steps.indexOf(role);
+    return idx >= 0 ? idx : 0;
   }
 }
