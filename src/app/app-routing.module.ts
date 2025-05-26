@@ -11,6 +11,7 @@ const routes: Routes = [
   { path: 'valuation/new', component: ValuationFormComponent },
   { path: 'stakeholder', component: StakeholderUpdateComponent },
   {path: 'valuations/:valuationId/stakeholder', component: StakeholderViewComponent},
+  {path: 'stakeholder-update/:valuationId',component: StakeholderUpdateComponent},
   { path: '**', redirectTo: '' }
 ];
 

@@ -1,6 +1,6 @@
 // src/app/stakeholder/stakeholder.service.ts
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Stakeholder } from './stakeholder.model';
 import { environment } from '../../../environments/environment';
@@ -36,6 +36,24 @@ export class StakeholderService {
     const url = `${this.baseUrl}/${valuationId}/stakeholder`;
     return this.http.put<void>(url, formData);
   }
+
+
+updateStakeholder(
+  valuationId: string,
+  vehicleNumber: string,
+  applicantContact: string,
+  body: any
+): Observable<any> {
+  const qp = new HttpParams()
+    .set('vehicleNumber', vehicleNumber)
+    .set('applicantContact', applicantContact);
+
+  return this.http.put(
+    `/api/valuations/${valuationId}/stakeholder`,
+     body,
+     { params: qp }
+  );
+}
 
   /**
    * Delete the stakeholder section for this valuation

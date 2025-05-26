@@ -1,189 +1,204 @@
-// src/app/stakeholder-update/stakeholder-update.component.ts
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router }   from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
-import { v4 as uuidv4 } from 'uuid';
-import { StakeholderService } from './stakeholder.service';
-import { DocumentUpload } from './document-upload.model';
-import { forkJoin } from 'rxjs';
+import { StakeholderService }        from '../../services/stakeholder.service';
 
 @Component({
   selector: 'app-stakeholder-update',
   templateUrl: './stakeholder-update.component.html',
-  styleUrls: ['./stakeholder-update.component.scss'],
+  styleUrls: ['./stakeholder-update.component.scss']
 })
 export class StakeholderUpdateComponent implements OnInit {
+  valuationId!: string;
+  vehicleNumber!: string;
+  applicantContact!: string;
+
+  stakeholderOptions: string[] = [];  // if you have a picklist
   form!: FormGroup;
+  loading = true;
+  error: string | null = null;
+
   saving = false;
   saveInProgress = false;
   submitInProgress = false;
-  error: string | null = null;
 
-  stakeholderOptions = [
-    'Acme Claims Ltd.',
-    'Beta Insurance Co.',
-    'Others'
-  ];
-
-  private valuationId!: string;
+  rcFile?: File;
+  insuranceFile?: File;
+  otherFiles: File[] = [];
 
   constructor(
-    private fb: FormBuilder,
-    private svc: StakeholderService,
+    private route: ActivatedRoute,
     private router: Router,
-    private route: ActivatedRoute
+    private fb: FormBuilder,
+    private svc: StakeholderService
   ) {}
 
-  ngOnInit() {
-    const routeId = this.route.snapshot.paramMap.get('valuationId');
-    this.valuationId = routeId && routeId !== 'null'
-      ? routeId
-      : uuidv4();
-
-    this.form = this.fb.group({
-      stakeholderName: ['Others', Validators.required],
-      stakeholderExecutiveName: ['', Validators.required],
-      stakeholderExecutiveContact: ['', [Validators.required, Validators.pattern(/^\+?\d+$/)]],
-      stakeholderExecutiveWhatsapp: ['', Validators.pattern(/^\+?\d+$/)],
-      stakeholderExecutiveEmail: ['', [Validators.required, Validators.email]],
-      applicantName: ['', Validators.required],
-      applicantContact: ['', [Validators.required, Validators.pattern(/^\+?\d+$/)]],
-      vehicleNumber: ['', Validators.required],
-      vehicleSegment: ['', Validators.required],
-      rcFile: [null],
-      insuranceFile: [null],
-      otherFiles: [[]]
+  ngOnInit(): void {
+    // Read route + query params
+    this.valuationId = this.route.snapshot.paramMap.get('valuationId')!;
+    this.route.queryParamMap.subscribe(params => {
+      this.vehicleNumber    = params.get('vehicleNumber')!;
+      this.applicantContact = params.get('applicantContact')!;
+      this.initForm();
+      this.loadStakeholder();
     });
   }
 
-  onFileChange(event: Event, controlName: 'rcFile' | 'insuranceFile') {
+  private initForm() {
+    this.form = this.fb.group({
+      stakeholderName:           ['', Validators.required],
+      stakeholderExecutiveName:  ['', Validators.required],
+      stakeholderExecutiveContact:['', Validators.required],
+      stakeholderExecutiveWhatsapp: [''],
+      stakeholderExecutiveEmail: ['',
+        [Validators.email]
+      ],
+      applicantName:             ['', Validators.required],
+      applicantContact:          [this.applicantContact, Validators.required],
+      vehicleNumber:             ['', Validators.required],
+      vehicleSegment:            ['', Validators.required]
+    });
+  }
+
+  private loadStakeholder() {
+    this.loading = true;
+    this.error   = null;
+
+    this.svc.getStakeholder(
+      this.valuationId,
+      this.vehicleNumber,
+      this.applicantContact
+    ).subscribe({
+      next: data => {
+        // patch form with existing API data
+        this.form.patchValue({
+          stakeholderName:           data.name,
+          stakeholderExecutiveName:  data.executiveName,
+          stakeholderExecutiveContact: data.executiveContact,
+          stakeholderExecutiveWhatsapp: data.executiveWhatsapp,
+          stakeholderExecutiveEmail: data.executiveEmail,
+          applicantName:             data.applicant.name,
+          applicantContact:          data.applicant.contact,
+          vehicleNumber:             this.vehicleNumber
+        });
+        this.loading = false;
+      },
+      error: err => {
+        this.error   = err.message || 'Failed to load stakeholder';
+        this.loading = false;
+      }
+    });
+  }
+
+  // single-file handler
+  onFileChange(event: Event, field: 'rcFile' | 'insuranceFile') {
     const input = event.target as HTMLInputElement;
     if (input.files?.length) {
-      this.form.patchValue({ [controlName]: input.files[0] });
+      this[field] = input.files[0];
     }
   }
 
+  // multi-file handler
   onMultiFileChange(event: Event) {
     const input = event.target as HTMLInputElement;
-    if (input.files) {
-      this.form.patchValue({ otherFiles: Array.from(input.files) });
-    }
+    this.otherFiles = input.files ? Array.from(input.files) : [];
   }
 
-  private buildPayload(): FormData {
-    const {
-      stakeholderName,
-      stakeholderExecutiveName,
-      stakeholderExecutiveContact,
-      stakeholderExecutiveWhatsapp,
-      stakeholderExecutiveEmail,
-      applicantName,
-      applicantContact,
-      vehicleNumber,
-      vehicleSegment,
-      rcFile,
-      insuranceFile,
-      otherFiles
-    } = this.form.value;
+  // build FormData for either save or submit
+  private buildFormData(): FormData {
+    const fd = new FormData();
+    const v = this.form.getRawValue();
 
-    const payload = new FormData();
-    payload.append('valuationId', this.valuationId);
-    payload.append('Name', stakeholderName);
-    payload.append('ExecutiveName', stakeholderExecutiveName);
-    payload.append('ExecutiveContact', stakeholderExecutiveContact);
-    if (stakeholderExecutiveWhatsapp) {
-      payload.append('ExecutiveWhatsapp', stakeholderExecutiveWhatsapp);
+    fd.append('name', v.stakeholderName);
+    fd.append('executiveName', v.stakeholderExecutiveName);
+    fd.append('executiveContact', v.stakeholderExecutiveContact);
+    fd.append('executiveWhatsapp', v.stakeholderExecutiveWhatsapp || '');
+    fd.append('executiveEmail', v.stakeholderExecutiveEmail || '');
+    fd.append('applicantName', v.applicantName);
+    fd.append('applicantContact', v.applicantContact);
+    fd.append('vehicleNumber', v.vehicleNumber);
+    fd.append('vehicleSegment', v.vehicleSegment);
+    fd.append('valuationId', this.valuationId);
+
+    if (this.rcFile) {
+      fd.append('rcFile', this.rcFile, this.rcFile.name);
     }
-    payload.append('ExecutiveEmail', stakeholderExecutiveEmail);
-    payload.append('ApplicantName', applicantName);
-    payload.append('ApplicantContact', applicantContact);
-    payload.append('VehicleNumber', vehicleNumber);
-    payload.append('VehicleSegment', vehicleSegment);
-    if (rcFile) {
-      payload.append('RcFile', rcFile, rcFile.name);
+    if (this.insuranceFile) {
+      fd.append('insuranceFile', this.insuranceFile, this.insuranceFile.name);
     }
-    if (insuranceFile) {
-      payload.append('InsuranceFile', insuranceFile, insuranceFile.name);
-    }
-    if (otherFiles?.length) {
-      otherFiles.forEach((f: File) =>
-        payload.append('OtherFiles', f, f.name)
-      );
-    }
-    return payload;
+    this.otherFiles.forEach(f => fd.append('otherFiles', f, f.name));
+
+    return fd;
   }
 
-  async onSave() {
+  // "Save" (draft) flow
+  onSave() {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
     }
     this.saving = true;
     this.saveInProgress = true;
-    this.error = null;
 
-    const { vehicleNumber, applicantContact } = this.form.value;
-    const payload = this.buildPayload();
-
-    try {
-
-      // 1) Upsert stakeholder
-      await this.svc
-        .upsertStakeholder(this.valuationId, payload)
-        .toPromise();
-
-      // 2) Start workflow
-      await this.svc
-        .startWorkflow(
-          this.valuationId,
-          vehicleNumber,
-          applicantContact
-        )
-        .toPromise();
-
-      this.router.navigate(['/']);
-    } catch (err: any) {
-      this.error = err?.error?.title || err?.message || 'Save failed';
-    } finally {
-      this.saving = false;
+    const payload = this.buildFormData();
+    this.svc.updateStakeholder(
+      this.valuationId,
+      this.vehicleNumber,
+      this.applicantContact,
+      payload
+    ).subscribe({
+      next: (): void => {
       this.saveInProgress = false;
-    }
+      this.saving = false;
+      // Optionally show a snack/toast here
+      },
+      error: (err: { message?: string }): void => {
+      this.error = err.message || 'Save failed';
+      this.saveInProgress = false;
+      this.saving = false;
+      }
+    });
   }
 
-  async onSubmit() {
+  // "Submit" flow
+  onSubmit() {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
     }
     this.saving = true;
     this.submitInProgress = true;
-    this.error = null;
 
-    const { vehicleNumber, applicantContact } = this.form.value;
-    const payload = this.buildPayload();
+    const payload = this.buildFormData();
+    this.svc.updateStakeholder(
+      this.valuationId,
+      this.vehicleNumber,
+      this.applicantContact,
+      payload
+    ).subscribe({
+      next: () => {
+        // after submit, navigate back to View
+        this.router.navigate(['/stakeholder-view', this.valuationId], {
+          queryParams: {
+            vehicleNumber:    this.vehicleNumber,
+            applicantContact: this.applicantContact
+          }
+        });
+      },
+      error: err => {
+        this.error = err.message || 'Submit failed';
+        this.submitInProgress = false;
+        this.saving = false;
+      }
+    });
+  }
 
-    try {
-
-       // 1) Upsert stakeholder
-      await this.svc
-        .upsertStakeholder(this.valuationId, payload)
-        .toPromise();
-
-      // 2) Complete workflow
-      await this.svc
-        .completeWorkflow(
-          this.valuationId,
-          vehicleNumber,
-          applicantContact
-        )
-        .toPromise();
-
-      this.router.navigate(['/']);
-    } catch (err: any) {
-      this.error = err?.error?.title || err?.message || 'Submit failed';
-    } finally {
-      this.saving = false;
-      this.submitInProgress = false;
-    }
+  onCancel() {
+    this.router.navigate(['/stakeholder-view', this.valuationId], {
+      queryParams: {
+        vehicleNumber:    this.vehicleNumber,
+        applicantContact: this.applicantContact
+      }
+    });
   }
 }

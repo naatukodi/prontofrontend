@@ -31,4 +31,24 @@ private base = `${environment.apiBaseUrl}/Valuations`;
       `&applicantContact=${applicantContact}`;
     return this.http.delete<void>(url);
   }
+
+  updateStakeholder(
+    valuationId: string,
+    vehicleNumber: string,
+    applicantContact: string,
+    formData: FormData         // ← accept a FormData here
+  ): Observable<any> {
+    const params = new HttpParams()
+      .set('vehicleNumber', vehicleNumber)
+      .set('applicantContact', applicantContact);
+
+    // NOTE: Don’t set a Content-Type header here; HttpClient will 
+    // detect the FormData and let the browser add the proper
+    // multipart boundary for you.
+    return this.http.put(
+      `${this.base}/${valuationId}/stakeholder`,
+      formData,
+      { params }
+    );
+  }
 }
