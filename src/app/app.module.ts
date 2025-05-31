@@ -26,9 +26,10 @@ import { StakeholderViewComponent } from './components/stakeholder-view/stakehol
 import { ValuationVehicleDetailsComponent } from './components/valution/valuation-vehicle-details/valuation-vehicle-details.component';
 import { ValuationUpdateComponent } from './components/valution/valuation-update/valuation-update.component';
 import { InspectionViewComponent } from './components/inspection/inspection-view/inspection-view.component';
+import { InspectionUpdateComponent } from './components/inspection/inspection-update/inspection-update.component';
 
 @NgModule({
-  declarations: [AppComponent, DashboardComponent, ValuationFormComponent, StakeholderUpdateComponent, StakeholderViewComponent, ValuationVehicleDetailsComponent, ValuationUpdateComponent, InspectionViewComponent],
+  declarations: [AppComponent, DashboardComponent, ValuationFormComponent, StakeholderUpdateComponent, StakeholderViewComponent, ValuationVehicleDetailsComponent, ValuationUpdateComponent, InspectionViewComponent, InspectionUpdateComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,

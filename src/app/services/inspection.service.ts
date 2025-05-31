@@ -2,8 +2,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';    
-import { VehicleDetails } from '../models/VehicleDetails';
+import { catchError } from 'rxjs/operators';
 import { WorkflowService } from '../services/workflow.service';
 import { environment } from '../../environments/environment';
 import { Inspection } from '../models/Inspection';

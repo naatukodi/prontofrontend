@@ -7,6 +7,7 @@ import { StakeholderViewComponent } from './components/stakeholder-view/stakehol
 import { ValuationVehicleDetailsComponent } from './components/valution/valuation-vehicle-details/valuation-vehicle-details.component';
 import {ValuationUpdateComponent} from './components/valution/valuation-update/valuation-update.component';
 import { InspectionViewComponent } from './components/inspection/inspection-view/inspection-view.component';
+import { InspectionUpdateComponent } from './components/inspection/inspection-update/inspection-update.component';
 
 const routes: Routes = [
   { path: '', component: DashboardComponent },
@@ -17,6 +18,7 @@ const routes: Routes = [
   { path: 'valuation/:valuationId/vehicle-details', component: ValuationVehicleDetailsComponent },
   { path: 'valuation/:valuationId/vehicle-details/update', component: ValuationUpdateComponent },
   { path: 'valuation/:valuationId/inspection', component: InspectionViewComponent },
+  { path: 'valuation/:valuationId/inspection/update', component: InspectionUpdateComponent },
   { path: '**', redirectTo: '' }
 ];
 

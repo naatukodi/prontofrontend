@@ -80,12 +80,13 @@ export class InspectionViewComponent implements OnInit {
   }
 
   /** Navigate to an edit screen (implement as needed) */
-  onEdit(): void {
+  onEdit() {
+    // Navigate to an edit screen for this inspection
     this.router.navigate(
-      ['valuation', this.valuationId, 'inspection', 'update'],
+      ['/valuation', this.valuationId, 'inspection', 'update'],
       {
         queryParams: {
-          vehicleNumber:    this.vehicleNumber,
+          vehicleNumber: this.vehicleNumber,
           applicantContact: this.applicantContact
         }
       }
