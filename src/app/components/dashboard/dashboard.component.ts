@@ -77,4 +77,16 @@ export class DashboardComponent implements OnInit {
         }
       );
     }
+  /** Navigate to the AVO view for this valuation */
+    goToInspection(v: Valuation) {
+      this.router.navigate(
+        ['/valuation', v.id, 'inspection'],
+        {
+          queryParams: {
+            vehicleNumber: v.vehicleNumber,
+            applicantContact: v.applicantContact
+          }
+        }
+      );
+    }
   }
