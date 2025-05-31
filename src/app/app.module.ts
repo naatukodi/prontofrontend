@@ -18,13 +18,16 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTabsModule } from '@angular/material/tabs';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 import { ValuationFormComponent } from './components/valuation-form/valuation-form.component';
 import { StakeholderUpdateComponent } from './components/stakeholder-update/stakeholder-update.component';
 import { StakeholderViewComponent } from './components/stakeholder-view/stakeholder-view.component';
+import { ValuationVehicleDetailsComponent } from './components/valution/valuation-vehicle-details/valuation-vehicle-details.component';
+import { ValuationUpdateComponent } from './components/valution/valuation-update/valuation-update.component';
 
 @NgModule({
-  declarations: [AppComponent, DashboardComponent, ValuationFormComponent, StakeholderUpdateComponent, StakeholderViewComponent],
+  declarations: [AppComponent, DashboardComponent, ValuationFormComponent, StakeholderUpdateComponent, StakeholderViewComponent, ValuationVehicleDetailsComponent, ValuationUpdateComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
@@ -44,6 +47,7 @@ import { StakeholderViewComponent } from './components/stakeholder-view/stakehol
     MatCheckboxModule,
     MatNativeDateModule,
     MatSelectModule,
+    MatSnackBarModule,
     MatTabsModule
   ],
   providers: [],

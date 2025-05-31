@@ -64,4 +64,17 @@ export class DashboardComponent implements OnInit {
       }
     );
   }
-}
+
+    /** Navigate to the vehicle details for this valuation */
+    goToValuation(v: Valuation) {
+      this.router.navigate(
+        ['/valuation', v.id, 'vehicle-details'],
+        {
+          queryParams: {
+            vehicleNumber: v.vehicleNumber,
+            applicantContact: v.applicantContact
+          }
+        }
+      );
+    }
+  }

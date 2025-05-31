@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router }   from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { StakeholderService }        from '../../services/stakeholder.service';
+import { StakeholderService } from '../../services/stakeholder.service';
 import { Observable } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
+import { WorkflowService } from '../../services/workflow.service';
 
 @Component({
   selector: 'app-stakeholder-update',
@@ -32,7 +33,8 @@ export class StakeholderUpdateComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private fb: FormBuilder,
-    private svc: StakeholderService
+    private svc: StakeholderService,
+    private workflowSvc: WorkflowService
   ) {}
 
   ngOnInit(): void {
@@ -152,7 +154,7 @@ export class StakeholderUpdateComponent implements OnInit {
       payload
     ).pipe(
       // After successful update, start workflow
-      switchMap(() => this.svc.startWorkflow(this.valuationId, 1,this.vehicleNumber, this.applicantContact))
+      switchMap(() => this.workflowSvc.startWorkflow(this.valuationId, 1,this.vehicleNumber, this.applicantContact))
     ).subscribe({
       next: (): void => {
         this.saveInProgress = false;
@@ -184,9 +186,9 @@ export class StakeholderUpdateComponent implements OnInit {
       payload
     ).pipe(
       // Complete workflow with step 1
-      switchMap(() => this.svc.completeWorkflow(this.valuationId, 1,this.vehicleNumber, this.applicantContact)),
+      switchMap(() => this.workflowSvc.completeWorkflow(this.valuationId, 1,this.vehicleNumber, this.applicantContact)),
       // Start workflow with step 2
-      switchMap(() => this.svc.startWorkflow(this.valuationId, 2,this.vehicleNumber, this.applicantContact))
+      switchMap(() => this.workflowSvc.startWorkflow(this.valuationId, 2,this.vehicleNumber, this.applicantContact))
     ).subscribe({
       next: () => {
       // after submit, navigate back to View
