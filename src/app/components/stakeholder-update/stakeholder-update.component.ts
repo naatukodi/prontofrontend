@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router }   from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { StakeholderService }        from '../../services/stakeholder.service';
+import { Observable } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-stakeholder-update',
@@ -141,21 +143,26 @@ export class StakeholderUpdateComponent implements OnInit {
     this.saveInProgress = true;
 
     const payload = this.buildFormData();
+    
+    // First update stakeholder
     this.svc.updateStakeholder(
       this.valuationId,
-      this.vehicleNumber,
+      this.vehicleNumber, 
       this.applicantContact,
       payload
+    ).pipe(
+      // After successful update, start workflow
+      switchMap(() => this.svc.startWorkflow(this.valuationId, 1,this.vehicleNumber, this.applicantContact))
     ).subscribe({
       next: (): void => {
-      this.saveInProgress = false;
-      this.saving = false;
-      // Optionally show a snack/toast here
+        this.saveInProgress = false;
+        this.saving = false;
+        // Optionally show a snack/toast here
       },
       error: (err: { message?: string }): void => {
-      this.error = err.message || 'Save failed';
-      this.saveInProgress = false;
-      this.saving = false;
+        this.error = err.message || 'Save failed';
+        this.saveInProgress = false; 
+        this.saving = false;
       }
     });
   }
@@ -175,23 +182,28 @@ export class StakeholderUpdateComponent implements OnInit {
       this.vehicleNumber,
       this.applicantContact,
       payload
+    ).pipe(
+      // Complete workflow with step 1
+      switchMap(() => this.svc.completeWorkflow(this.valuationId, 1,this.vehicleNumber, this.applicantContact)),
+      // Start workflow with step 2
+      switchMap(() => this.svc.startWorkflow(this.valuationId, 2,this.vehicleNumber, this.applicantContact))
     ).subscribe({
       next: () => {
-        // after submit, navigate back to View
-        this.router.navigate(['/stakeholder-view', this.valuationId], {
-          queryParams: {
-            vehicleNumber:    this.vehicleNumber,
-            applicantContact: this.applicantContact
-          }
-        });
+      // after submit, navigate back to View
+      this.router.navigate(['/stakeholder-view', this.valuationId], {
+        queryParams: {
+        vehicleNumber:    this.vehicleNumber,
+        applicantContact: this.applicantContact
+        }
+      });
       },
       error: err => {
-        this.error = err.message || 'Submit failed';
-        this.submitInProgress = false;
-        this.saving = false;
+      this.error = err.message || 'Submit failed';
+      this.submitInProgress = false;
+      this.saving = false;
       }
     });
-  }
+    }
 
   onCancel() {
     this.router.navigate(['/stakeholder-view', this.valuationId], {
@@ -202,3 +214,5 @@ export class StakeholderUpdateComponent implements OnInit {
     });
   }
 }
+
+

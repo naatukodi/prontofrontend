@@ -51,4 +51,18 @@ private base = `${environment.apiBaseUrl}/Valuations`;
       { params }
     );
   }
+
+  startWorkflow(valuationId: string, stepOrder: number, vehicleNumber: string, applicantContact: string): Observable<void> {
+    return this.http.post<void>(
+      `${this.base}/${valuationId}/workflow/${stepOrder}/start?vehicleNumber=${vehicleNumber}&applicantContact=${applicantContact}`,
+      null
+    );
+  }
+
+  completeWorkflow(valuationId: string, stepOrder: number, vehicleNumber: string, applicantContact: string): Observable<void> {
+    return this.http.post<void>(
+      `${this.base}/${valuationId}/workflow/${stepOrder}/complete?vehicleNumber=${vehicleNumber}&applicantContact=${applicantContact}`,
+      null
+    );
+  }
 }
