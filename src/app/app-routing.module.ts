@@ -8,6 +8,8 @@ import { ValuationVehicleDetailsComponent } from './components/valution/valuatio
 import {ValuationUpdateComponent} from './components/valution/valuation-update/valuation-update.component';
 import { InspectionViewComponent } from './components/inspection/inspection-view/inspection-view.component';
 import { InspectionUpdateComponent } from './components/inspection/inspection-update/inspection-update.component';
+import { QualityControlViewComponent } from './components/qc/quality-control-view/quality-control-view.component';
+import { QualityControlUpdateComponent } from './components/qc/quality-control-update/quality-control-update.component';
 
 const routes: Routes = [
   { path: '', component: DashboardComponent },
@@ -19,6 +21,8 @@ const routes: Routes = [
   { path: 'valuation/:valuationId/vehicle-details/update', component: ValuationUpdateComponent },
   { path: 'valuation/:valuationId/inspection', component: InspectionViewComponent },
   { path: 'valuation/:valuationId/inspection/update', component: InspectionUpdateComponent },
+  { path: 'valuation/:valuationId/quality-control', component: QualityControlViewComponent },
+  { path: 'valuation/:valuationId/quality-control/update', component: QualityControlUpdateComponent },
   { path: '**', redirectTo: '' }
 ];
 

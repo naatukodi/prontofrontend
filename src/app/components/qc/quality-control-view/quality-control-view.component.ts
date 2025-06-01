@@ -1,20 +1,20 @@
-// src/app/valuation‐inspection/valuation‐inspection.component.ts
+// src/app/valuation-quality-control/quality-control-view.component.ts
 
 import { Component, OnInit } from '@angular/core';
-import { HttpErrorResponse, HttpParams } from '@angular/common/http';
+import { HttpErrorResponse } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Inspection } from '../../../models/Inspection';       
-import { InspectionService } from '../../../services/inspection.service'; 
+import { QualityControl } from '../../../models/QualityControl';         // Adjust path as needed
+import { QualityControlService } from '../../../services/quality-control.service'; // Adjust path as needed
 
 @Component({
-  selector: 'app-valuation-inspection',
-  templateUrl: './inspection-view.component.html',
-  styleUrls: ['./inspection-view.component.scss']
+  selector: 'app-valuation-quality-control',
+  templateUrl: './quality-control-view.component.html',
+  styleUrls: ['./quality-control-view.component.scss']
 })
-export class InspectionViewComponent implements OnInit {
+export class QualityControlViewComponent implements OnInit {
   loading = true;
   error: string | null = null;
-  inspection: Inspection | null = null;
+  qualityControl: QualityControl | null = null;
 
   // route param & query params
   valuationId!: string;
@@ -24,7 +24,7 @@ export class InspectionViewComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private inspectionService: InspectionService
+    private qcService: QualityControlService
   ) {}
 
   ngOnInit(): void {
@@ -49,7 +49,7 @@ export class InspectionViewComponent implements OnInit {
       if (vn && ac) {
         this.vehicleNumber = vn;
         this.applicantContact = ac;
-        this.fetchInspection();
+        this.fetchQualityControl();
       } else {
         this.loading = false;
         this.error = 'Missing required query parameters (vehicleNumber / applicantContact).';
@@ -57,33 +57,34 @@ export class InspectionViewComponent implements OnInit {
     });
   }
 
-  private fetchInspection() {
+  private fetchQualityControl() {
     this.loading = true;
     this.error = null;
 
-    // Assuming InspectionService has a getInspection(...) method
-    this.inspectionService
-      .getInspectionDetails(
-      this.valuationId,
-      this.vehicleNumber,
-      this.applicantContact
-      ).subscribe({
-      next: data => {
-        this.inspection = data;
-        this.loading = false;
-      },
-      error: err => {
-        this.error = err.message || 'Failed to load inspection';
-        this.loading = false;
-      }
+    this.qcService
+      .getQualityControlDetails(this.valuationId, this.vehicleNumber, this.applicantContact)
+      .subscribe({
+        next: (data: QualityControl) => {
+          this.qualityControl = data;
+          this.loading = false;
+        },
+        error: (err: HttpErrorResponse) => {
+          this.loading = false;
+          if (err.error && err.error.message) {
+            this.error = err.error.message;
+          } else if (err.status === 404) {
+            this.error = 'Quality control record not found.';
+          } else {
+            this.error = `Unexpected error (${err.status}): ${err.message}`;
+          }
+        }
       });
   }
 
-  /** Navigate to an edit screen (implement as needed) */
-  onEdit() {
-    // Navigate to an edit screen for this inspection
+  /** Navigate to an edit screen (implement route as needed) */
+  onEdit(): void {
     this.router.navigate(
-      ['/valuation', this.valuationId, 'inspection', 'update'],
+      ['/valuation', this.valuationId, 'quality-control', 'update'],
       {
         queryParams: {
           vehicleNumber: this.vehicleNumber,
@@ -95,9 +96,9 @@ export class InspectionViewComponent implements OnInit {
 
   /** Delete (or mark deleted) – implement your own logic if needed */
   onDelete(): void {
-    if (!confirm('Delete this inspection record?')) return;
-    this.inspectionService
-      .deleteInspectionDetails(this.valuationId, this.vehicleNumber, this.applicantContact)
+    if (!confirm('Delete this quality control record?')) return;
+    this.qcService
+      .deleteQualityControlDetails(this.valuationId, this.vehicleNumber, this.applicantContact)
       .subscribe({
         next: () => this.router.navigate(['/']),
         error: (err) => (this.error = err.message || 'Delete failed')
@@ -105,7 +106,6 @@ export class InspectionViewComponent implements OnInit {
   }
 
   onBack(): void {
-    // Navigate back to the previous screen
     this.router.navigate(['/valuation', this.valuationId], {
       queryParams: {
         vehicleNumber: this.vehicleNumber,

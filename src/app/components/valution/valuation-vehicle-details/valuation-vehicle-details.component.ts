@@ -130,4 +130,14 @@ export class ValuationVehicleDetailsComponent implements OnInit {
       error: (err) => this.error = err.message || 'Delete failed'
     });
   }
+
+  onBack(): void {
+    // Navigate back to the previous screen
+    this.router.navigate(['/valuation', this.valuationId], {
+      queryParams: {
+        vehicleNumber: this.vehicleNumber,
+        applicantContact: this.applicantContact
+      }
+    });
+  }
 }

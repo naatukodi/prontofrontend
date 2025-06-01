@@ -230,7 +230,7 @@ export class InspectionUpdateComponent implements OnInit {
       .updateInspectionDetails(this.valuationId, this.vehicleNumber, this.applicantContact, payload)
       .pipe(
         // After successful update, start workflow
-        switchMap(() => this.workflowSvc.startWorkflow(this.valuationId, 3, this.vehicleNumber, this.applicantContact))
+        switchMap(() => this.workflowSvc.startWorkflow(this.valuationId, 3, this.vehicleNumber, encodeURIComponent(this.applicantContact)))
       )
       .subscribe({
         next: () => {
@@ -263,9 +263,9 @@ export class InspectionUpdateComponent implements OnInit {
       .updateInspectionDetails(this.valuationId, this.vehicleNumber, this.applicantContact, payload)
       .pipe(
       // Complete workflow with step 1
-      switchMap(() => this.workflowSvc.completeWorkflow(this.valuationId, 3, this.vehicleNumber, this.applicantContact)),
-      // Start workflow with step 2  
-      switchMap(() => this.workflowSvc.startWorkflow(this.valuationId, 4, this.vehicleNumber, this.applicantContact))
+      switchMap(() => this.workflowSvc.completeWorkflow(this.valuationId, 3, this.vehicleNumber, encodeURIComponent(this.applicantContact))),
+      // Start workflow with step 2
+      switchMap(() => this.workflowSvc.startWorkflow(this.valuationId, 4, this.vehicleNumber, encodeURIComponent(this.applicantContact)))
       )
       .subscribe({
       next: () => {

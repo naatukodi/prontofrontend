@@ -99,4 +99,13 @@ setOtherDocuments() {
       error: err => this.error = err.message || 'Delete failed'
     });
   }
+
+  onBack() {
+    this.router.navigate(['/valuation', this.valuationId], {
+      queryParams: {
+        vehicleNumber: this.vehicleNumber,
+        applicantContact: this.applicantContact
+      }
+    });
+  }
 }

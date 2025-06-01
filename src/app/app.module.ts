@@ -27,9 +27,11 @@ import { ValuationVehicleDetailsComponent } from './components/valution/valuatio
 import { ValuationUpdateComponent } from './components/valution/valuation-update/valuation-update.component';
 import { InspectionViewComponent } from './components/inspection/inspection-view/inspection-view.component';
 import { InspectionUpdateComponent } from './components/inspection/inspection-update/inspection-update.component';
+import { QualityControlViewComponent } from './components/qc/quality-control-view/quality-control-view.component';
+import { QualityControlUpdateComponent } from './components/qc/quality-control-update/quality-control-update.component';
 
 @NgModule({
-  declarations: [AppComponent, DashboardComponent, ValuationFormComponent, StakeholderUpdateComponent, StakeholderViewComponent, ValuationVehicleDetailsComponent, ValuationUpdateComponent, InspectionViewComponent, InspectionUpdateComponent],
+  declarations: [AppComponent, DashboardComponent, ValuationFormComponent, StakeholderUpdateComponent, StakeholderViewComponent, ValuationVehicleDetailsComponent, ValuationUpdateComponent, InspectionViewComponent, InspectionUpdateComponent, QualityControlViewComponent, QualityControlUpdateComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,

@@ -89,4 +89,16 @@ export class DashboardComponent implements OnInit {
         }
       );
     }
+  /** Navigate to the QC view for this valuation */
+  goToQualityControl(v: Valuation) {
+    this.router.navigate(
+      ['/valuation', v.id, 'quality-control'],
+      {
+        queryParams: {
+          vehicleNumber: v.vehicleNumber,
+          applicantContact: v.applicantContact
+        }
+      }
+    );
   }
+}
