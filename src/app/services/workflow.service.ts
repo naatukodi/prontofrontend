@@ -27,7 +27,7 @@ export class WorkflowService {
     );
   }
   getWorkflowStatus(valuationId: string, vehicleNumber: string, applicantContact: string): Observable<any> {
-    const url = `${this.baseUrl}/${valuationId}/workflow/status`;
+    const url = `${this.baseUrl}/${valuationId}/workflow`;
     const params = new HttpParams()
       .set('vehicleNumber', vehicleNumber)
       .set('applicantContact', applicantContact);

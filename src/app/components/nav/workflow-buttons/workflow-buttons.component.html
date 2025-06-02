@@ -1,0 +1,54 @@
+<!-- src/app/shared/workflow-buttons/workflow-buttons.component.html -->
+
+<div class="button-group">
+  <!-- Stakeholder Tab -->
+  <!-- no exact: true, so /stakeholder/update also matches -->
+  <button
+    mat-button
+    [routerLink]="['/valuations', id, 'stakeholder']"
+    [queryParams]="{ vehicleNumber: vehicleNumber, applicantContact: applicantContact }"
+    routerLinkActive="active-step"
+  >
+    Stakeholder
+  </button>
+
+  <!-- Vehicle Details Tab -->
+  <button
+    mat-button
+    [routerLink]="['/valuation', id, 'vehicle-details']"
+    [queryParams]="{ vehicleNumber: vehicleNumber, applicantContact: applicantContact }"
+    routerLinkActive="active-step"
+  >
+    Vehicle Details
+  </button>
+
+  <!-- Inspection Tab -->
+  <button
+    mat-button
+    [routerLink]="['/valuation', id, 'inspection']"
+    [queryParams]="{ vehicleNumber: vehicleNumber, applicantContact: applicantContact }"
+    routerLinkActive="active-step"
+  >
+    Inspection
+  </button>
+
+  <!-- Quality Control Tab -->
+  <button
+    mat-button
+    [routerLink]="['/valuation', id, 'quality-control']"
+    [queryParams]="{ vehicleNumber: vehicleNumber, applicantContact: applicantContact }"
+    routerLinkActive="active-step"
+  >
+    Quality Control
+  </button>
+
+  <!-- Final Report Tab -->
+  <button
+    mat-button
+    [routerLink]="['/valuation', id, 'final-report']"
+    [queryParams]="{ vehicleNumber: vehicleNumber, applicantContact: applicantContact }"
+    routerLinkActive="active-step"
+  >
+    Final Report
+  </button>
+</div>

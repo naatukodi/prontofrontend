@@ -16,7 +16,7 @@ const routes: Routes = [
   { path: 'valuation/new', component: ValuationFormComponent },
   { path: 'stakeholder', component: StakeholderUpdateComponent },
   { path: 'valuations/:valuationId/stakeholder', component: StakeholderViewComponent },
-  { path: 'stakeholder-update/:valuationId', component: StakeholderUpdateComponent },
+  { path: 'valuations/:valuationId/stakeholder/update', component: StakeholderUpdateComponent },
   { path: 'valuation/:valuationId/vehicle-details', component: ValuationVehicleDetailsComponent },
   { path: 'valuation/:valuationId/vehicle-details/update', component: ValuationUpdateComponent },
   { path: 'valuation/:valuationId/inspection', component: InspectionViewComponent },

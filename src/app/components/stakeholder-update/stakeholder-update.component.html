@@ -1,5 +1,12 @@
+
 <form [formGroup]="form" (ngSubmit)="onSubmit()">
   <h2>Stakeholder Update</h2>
+
+    <app-workflow-buttons
+        [id]="valuationId"
+        [vehicleNumber]="vehicleNumber"
+        [applicantContact]="applicantContact">
+    </app-workflow-buttons>
 
   <!-- Stakeholder Group -->
   <fieldset class="nested-group">

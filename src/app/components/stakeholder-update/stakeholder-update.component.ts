@@ -16,7 +16,30 @@ export class StakeholderUpdateComponent implements OnInit {
   vehicleNumber!: string;
   applicantContact!: string;
 
-  stakeholderOptions: string[] = [];  // if you have a picklist
+stakeholderOptions: string[] = [
+  'State Bank of India (SBI)',
+  'HDFC Bank',
+  'ICICI Bank',
+  'Axis Bank',
+  'IndusInd Bank',
+  'Punjab National Bank (PNB)',
+  'Federal Bank',
+  'Union Bank of India',
+  'Bank of Baroda',
+  'IDFC FIRST Bank',
+  'Karur Vysya Bank',
+  'Kotak Mahindra Bank',
+  'Mahindra Finance',
+  'Bajaj Finserv',
+  'Hero FinCorp',
+  'TVS Credit Services',
+  'Shriram Finance',
+  'Muthoot Capital Services',
+  'Cholamandalam Investment and Finance Company',
+  'Sundaram Finance',
+  'Manappuram Finance',
+  'L&T Finance'
+]; 
   form!: FormGroup;
   loading = true;
   error: string | null = null;

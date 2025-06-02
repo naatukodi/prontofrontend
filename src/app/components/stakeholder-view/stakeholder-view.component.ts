@@ -64,7 +64,7 @@ export class StakeholderViewComponent implements OnInit {
   onEdit() {
     // reuse your existing stakeholder-update route
     this.router.navigate(
-      ['/stakeholder-update', this.valuationId],
+      ['/valuations', this.valuationId, 'stakeholder', 'update'],
       {
         queryParams: {
           vehicleNumber: this.vehicleNumber,

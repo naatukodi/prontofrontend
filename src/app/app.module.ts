@@ -29,9 +29,10 @@ import { InspectionViewComponent } from './components/inspection/inspection-view
 import { InspectionUpdateComponent } from './components/inspection/inspection-update/inspection-update.component';
 import { QualityControlViewComponent } from './components/qc/quality-control-view/quality-control-view.component';
 import { QualityControlUpdateComponent } from './components/qc/quality-control-update/quality-control-update.component';
+import { WorkflowButtonsComponent } from './components/nav/workflow-buttons/workflow-buttons.component';
 
 @NgModule({
-  declarations: [AppComponent, DashboardComponent, ValuationFormComponent, StakeholderUpdateComponent, StakeholderViewComponent, ValuationVehicleDetailsComponent, ValuationUpdateComponent, InspectionViewComponent, InspectionUpdateComponent, QualityControlViewComponent, QualityControlUpdateComponent],
+  declarations: [AppComponent, DashboardComponent, ValuationFormComponent, StakeholderUpdateComponent, StakeholderViewComponent, ValuationVehicleDetailsComponent, ValuationUpdateComponent, InspectionViewComponent, InspectionUpdateComponent, QualityControlViewComponent, QualityControlUpdateComponent, WorkflowButtonsComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,

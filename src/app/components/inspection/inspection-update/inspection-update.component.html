@@ -3,6 +3,12 @@
 <form [formGroup]="form" (ngSubmit)="onSubmit()">
   <h2>Inspection Update</h2>
 
+    <app-workflow-buttons
+        [id]="valuationId"
+        [vehicleNumber]="vehicleNumber"
+        [applicantContact]="applicantContact">
+    </app-workflow-buttons>
+
   <!-- Loading & Error -->
   <div *ngIf="loading">Loading inspection details …</div>
   <div *ngIf="error" class="error">{{ error }}</div>

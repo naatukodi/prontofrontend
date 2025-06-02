@@ -3,6 +3,12 @@
 <div *ngIf="loading">Loading inspection details…</div>
 <div *ngIf="error" class="error">{{ error }}</div>
 
+    <app-workflow-buttons
+        [id]="valuationId"
+        [vehicleNumber]="vehicleNumber"
+        [applicantContact]="applicantContact">
+    </app-workflow-buttons>
+
 <ng-container *ngIf="!loading && !error && inspection">
   <!-- Basic Inspection Info -->
   <fieldset class="nested‐group">
