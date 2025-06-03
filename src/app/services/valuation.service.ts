@@ -54,4 +54,23 @@ private readonly baseUrl = environment.apiBaseUrl + 'valuations';
             })
         );
   } 
+
+  getValuationDetailsfromAttesterApi(
+    valuationId: string,
+    vehicleNumber: string,
+    applicantContact: string
+  ): Observable<any> {
+    const url = `${this.baseUrl}/${valuationId}/valuation`;
+    const params = new HttpParams()
+      .set('vehicleNumber', vehicleNumber)
+      .set('applicantContact', applicantContact);
+
+    return this.http.get(url, { params })
+      .pipe(
+        catchError((err: HttpErrorResponse) => {
+          // normalize or rethrow
+          return throwError(() => err);
+        })
+      );
+  }
 }

@@ -5,6 +5,7 @@ import { StakeholderService } from '../../services/stakeholder.service';
 import { Observable } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { WorkflowService } from '../../services/workflow.service';
+import { ValuationService } from '../../services/valuation.service'; // Import if needed for other services
 
 @Component({
   selector: 'app-stakeholder-update',
@@ -57,6 +58,7 @@ stakeholderOptions: string[] = [
     private router: Router,
     private fb: FormBuilder,
     private svc: StakeholderService,
+    private valuationSvc: ValuationService,
     private workflowSvc: WorkflowService
   ) {}
 
@@ -211,7 +213,9 @@ stakeholderOptions: string[] = [
       // Complete workflow with step 1
       switchMap(() => this.workflowSvc.completeWorkflow(this.valuationId, 1,this.vehicleNumber, encodeURIComponent(this.applicantContact))),
       // Start workflow with step 2
-      switchMap(() => this.workflowSvc.startWorkflow(this.valuationId, 2,this.vehicleNumber, encodeURIComponent(this.applicantContact)))
+      switchMap(() => this.workflowSvc.startWorkflow(this.valuationId, 2,this.vehicleNumber, encodeURIComponent(this.applicantContact))),
+      // Finally, update vehicle valuation details
+      switchMap(() => this.valuationSvc.getValuationDetailsfromAttesterApi(this.valuationId, this.vehicleNumber, this.applicantContact))
     ).subscribe({
       next: () => {
       // after submit, navigate back to View
