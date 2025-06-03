@@ -219,12 +219,15 @@ stakeholderOptions: string[] = [
     ).subscribe({
       next: () => {
       // after submit, navigate back to View
-      this.router.navigate(['/stakeholder-view', this.valuationId], {
+      this.router.navigate(
+      ['/valuations', this.valuationId, 'stakeholder'],
+      {
         queryParams: {
-        vehicleNumber:    this.vehicleNumber,
-        applicantContact: this.applicantContact
+          vehicleNumber: this.vehicleNumber,
+          applicantContact: this.applicantContact
         }
-      });
+      }
+    );
       },
       error: err => {
       this.error = err.message || 'Submit failed';
@@ -235,13 +238,15 @@ stakeholderOptions: string[] = [
     }
 
   onCancel() {
-    this.router.navigate(['/stakeholder-view', this.valuationId], {
-      queryParams: {
-        vehicleNumber:    this.vehicleNumber,
-        applicantContact: this.applicantContact
+    this.router.navigate(
+      ['/valuations', this.valuationId, 'stakeholder'],
+      {
+        queryParams: {
+          vehicleNumber: this.vehicleNumber,
+          applicantContact: this.applicantContact
+        }
       }
-    });
+    );
   }
 }
-
 
