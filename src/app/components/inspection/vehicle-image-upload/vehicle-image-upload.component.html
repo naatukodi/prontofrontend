@@ -1,0 +1,96 @@
+<!-- src/app/vehicle-image-upload/vehicle-image-upload.component.html -->
+
+    <app-workflow-buttons
+        [id]="valuationId"
+        [vehicleNumber]="vehicleNumber"
+        [applicantContact]="applicantContact">
+    </app-workflow-buttons>
+
+<div class="upload-container">
+  <h2>Vehicle Photo Upload</h2>
+
+  <!-- Show a global error if route/query params are missing -->
+  <div *ngIf="error" class="error">{{ error }}</div>
+
+
+
+  <!-- Wait until we have valuationId, vehicleNumber, applicantContact -->
+  <ng-container *ngIf="!error">
+    <div class="grid">
+      <ng-container *ngFor="let field of imageFields">
+        <div class="image-card">
+          <!-- 1) Preview or Placeholder -->
+          <div class="preview">
+            <ng-container *ngIf="uploadedUrls[field.key]; else placeholder">
+              <img
+                [src]="uploadedUrls[field.key]"
+                [alt]="field.label"
+                class="thumbnail"
+              />
+            </ng-container>
+            <ng-template #placeholder>
+              <div class="placeholder">
+                <span>No Image</span>
+              </div>
+            </ng-template>
+          </div>
+
+          <!-- 2) Label -->
+          <div class="label">{{ field.label }} 
+            <span *ngIf="field.optional" class="optional">(optional)</span>
+          </div>
+
+          <!-- 3) File Input -->
+          <input
+            type="file"
+            accept="image/*"
+            (change)="onFileSelected($event, field.key)"
+          />
+
+          <!-- After: upload button disabled unless a new file is selected OR upload is in progress -->
+          <button
+            mat-raised-button
+            color="primary"
+            type="button"
+            [disabled]="
+              isUploading[field.key] ||
+              !selectedFiles[field.key]
+            "
+            (click)="uploadImage(field.key)"
+          >
+            {{ isUploading[field.key] ? 'Uploading…' : 'Upload' }}
+          </button>
+
+
+          <!-- 5) Per‐field Progress Bar -->
+          <div
+            class="progress-wrapper"
+            *ngIf="isUploading[field.key]"
+          >
+            <div
+              class="progress-bar"
+              [style.width.%]="uploadProgress[field.key] || 0"
+            ></div>
+            <span>{{ uploadProgress[field.key] || 0 }}%</span>
+          </div>
+
+          <!-- 6) Per‐field Error Message -->
+          <div
+            class="field-error"
+            *ngIf="uploadError[field.key]"
+          >
+            {{ uploadError[field.key] }}
+          </div>
+        </div>
+      </ng-container>
+    </div>
+  </ng-container>
+  <div class="actions">
+    <button
+      mat-raised-button
+      color="primary"
+      (click)="onBack()"
+    >
+      Back
+    </button>
+</div>

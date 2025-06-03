@@ -217,6 +217,16 @@ export class InspectionUpdateComponent implements OnInit {
     return fd;
   }
 
+  onClick() {
+    // Handle the click event for the upload button
+    this.router.navigate(['/valuation', this.valuationId, 'inspection','vehicle-image-upload'], {
+      queryParams: {
+        vehicleNumber: this.vehicleNumber,
+        applicantContact: this.applicantContact
+      }
+    });
+  }
+
   onSave() {
     if (this.form.invalid) {
       this.form.markAllAsTouched();

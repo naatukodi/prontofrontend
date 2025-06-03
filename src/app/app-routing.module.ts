@@ -10,6 +10,7 @@ import { InspectionViewComponent } from './components/inspection/inspection-view
 import { InspectionUpdateComponent } from './components/inspection/inspection-update/inspection-update.component';
 import { QualityControlViewComponent } from './components/qc/quality-control-view/quality-control-view.component';
 import { QualityControlUpdateComponent } from './components/qc/quality-control-update/quality-control-update.component';
+import { VehicleImageUploadComponent } from './components/inspection/vehicle-image-upload/vehicle-image-upload.component';
 
 const routes: Routes = [
   { path: '', component: DashboardComponent },
@@ -23,6 +24,7 @@ const routes: Routes = [
   { path: 'valuation/:valuationId/inspection/update', component: InspectionUpdateComponent },
   { path: 'valuation/:valuationId/quality-control', component: QualityControlViewComponent },
   { path: 'valuation/:valuationId/quality-control/update', component: QualityControlUpdateComponent },
+  { path: 'valuation/:valuationId/inspection/vehicle-image-upload', component: VehicleImageUploadComponent },
   { path: '**', redirectTo: '' }
 ];
 

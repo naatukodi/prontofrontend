@@ -79,6 +79,16 @@ export class InspectionViewComponent implements OnInit {
       });
   }
 
+  onClick() {
+    // Handle the click event for the upload button
+    this.router.navigate(['/valuation', this.valuationId, 'inspection','vehicle-image-upload'], {
+      queryParams: {
+        vehicleNumber: this.vehicleNumber,
+        applicantContact: this.applicantContact
+      }
+    });
+  }
+
   /** Navigate to an edit screen (implement as needed) */
   onEdit() {
     // Navigate to an edit screen for this inspection

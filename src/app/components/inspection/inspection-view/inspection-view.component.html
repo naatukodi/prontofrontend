@@ -225,25 +225,18 @@
   </fieldset>
 
   <!-- Photos -->
-  <fieldset class="nested‐group">
-    <legend>Photos</legend>
-    <div class="grid">
-      <ng-container *ngIf="inspection.photos?.length; else noPhotos">
-        <div *ngFor="let url of inspection.photos">
-          <a [href]="url" target="_blank">
-            <img
-              [src]="url"
-              alt="Inspection Photo"
-              style="max-width: 100%; height: auto; border: 1px solid #ccc; margin-bottom: 8px;"
-            />
-          </a>
-        </div>
-      </ng-container>
-      <ng-template #noPhotos>
-        <div>No photos available</div>
-      </ng-template>
+  <!-- upload Button -->
+     <fieldset class="nested‐group">
+    <div class="actions">
+      <button
+        mat-raised-button
+        color="primary"
+        (click)="onClick()"
+      >
+        View / Upload Images
+      </button>
     </div>
-  </fieldset>
+    </fieldset>
 
   <!-- Actions -->
   <div class="actions">
