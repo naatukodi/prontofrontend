@@ -60,7 +60,7 @@ private readonly baseUrl = environment.apiBaseUrl + 'valuations';
     vehicleNumber: string,
     applicantContact: string
   ): Observable<any> {
-    const url = `${this.baseUrl}/${valuationId}/valuation`;
+    const url = `${this.baseUrl}/${valuationId}/vehicledetails/with-rc`;
     const params = new HttpParams()
       .set('vehicleNumber', vehicleNumber)
       .set('applicantContact', applicantContact);
