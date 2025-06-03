@@ -44,6 +44,20 @@ export class QualityControlService {
       .pipe(catchError((err: HttpErrorResponse) => throwError(() => err)));
   }
 
+  getValuationDetailsfromAI(
+    valuationId: string,
+    vehicleNumber: string,
+    applicantContact: string
+  ): Observable<any> {
+    const url = `${this.baseUrl}/${valuationId}/valuation`;
+    const params = new HttpParams()
+      .set('vehicleNumber', vehicleNumber)
+      .set('applicantContact', applicantContact);
+    return this.http
+      .get<any>(url, { params })
+      .pipe(catchError((err: HttpErrorResponse) => throwError(() => err)));
+  }
+
   deleteQualityControlDetails(
     valuationId: string,
     vehicleNumber: string,

@@ -3,11 +3,12 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { InspectionService } from '../../../services/inspection.service'; // Adjust path as needed
-import { Inspection } from '../../../models/Inspection';                // Adjust path as needed
+import { InspectionService } from '../../../services/inspection.service';
+import { Inspection } from '../../../models/Inspection';               
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { switchMap } from 'rxjs/operators';
-import { WorkflowService } from '../../../services/workflow.service'; // Adjust path as needed
+import { WorkflowService } from '../../../services/workflow.service';
+import { QualityControlService } from 'src/app/services/quality-control.service';
 
 @Component({
   selector: 'app-valuation-inspection-update',
@@ -35,6 +36,7 @@ export class InspectionUpdateComponent implements OnInit {
     private router: Router,
     private inspectionSvc: InspectionService,
     private workflowSvc: WorkflowService,
+    private qualityControlSvc: QualityControlService,
     private _snackBar: MatSnackBar
   ) {}
 
@@ -275,7 +277,9 @@ export class InspectionUpdateComponent implements OnInit {
       // Complete workflow with step 1
       switchMap(() => this.workflowSvc.completeWorkflow(this.valuationId, 3, this.vehicleNumber, encodeURIComponent(this.applicantContact))),
       // Start workflow with step 2
-      switchMap(() => this.workflowSvc.startWorkflow(this.valuationId, 4, this.vehicleNumber, encodeURIComponent(this.applicantContact)))
+      switchMap(() => this.workflowSvc.startWorkflow(this.valuationId, 4, this.vehicleNumber, encodeURIComponent(this.applicantContact))),
+      // Get valuation details from AI
+      switchMap(() => this.qualityControlSvc.getValuationDetailsfromAI(this.valuationId, this.vehicleNumber, this.applicantContact))
       )
       .subscribe({
       next: () => {
