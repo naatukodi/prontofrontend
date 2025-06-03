@@ -74,6 +74,17 @@
             <span>{{ uploadProgress[field.key] || 0 }}%</span>
           </div>
 
+          <ng-container *ngIf="uploadedUrls[field.key]">
+            <button
+              type="button"
+              class="open-image-btn"
+              (click)="openImage(uploadedUrls[field.key]!)"
+              style="margin-top: 8px;"
+            >
+              Open Image
+            </button>
+            </ng-container>
+
           <!-- 6) Per‐field Error Message -->
           <div
             class="field-error"

@@ -193,7 +193,7 @@ export class VehicleImageUploadComponent implements OnInit {
     return formData;
   }
 
-  uploadImage(fieldKey: ImageKey) {
+  async uploadImage(fieldKey: ImageKey) {
     const isOptional = this.imageFields.find(f => f.key === fieldKey)!.optional;
     if (!this.selectedFiles[fieldKey] && !isOptional) {
       this.uploadError[fieldKey] = `Please select "${this.getLabel(fieldKey)}" image.`;
@@ -209,35 +209,45 @@ export class VehicleImageUploadComponent implements OnInit {
 
     const payload = this.buildSingleFormData(fieldKey);
 
-    this.vehicleInspectionService.uploadPhotos(
-      this.valuationId,
-      this.vehicleNumber,
-      this.applicantContact,
-      payload,
-      { reportProgress: true, observe: 'events' }
-    ).pipe(
-      finalize(() => {
-        this.isUploading[fieldKey] = false;
-      })
-    ).subscribe({
-      next: (event: HttpEvent<any>) => {
-        if (event.type === HttpEventType.UploadProgress && event.total) {
-          this.uploadProgress[fieldKey] = Math.round((100 * event.loaded) / event.total);
-        } else if (event.type === HttpEventType.Response) {
-          const body = event.body as { url: string };
-          this.uploadedUrls[fieldKey] = body.url;
-          this.uploadProgress[fieldKey] = 100;
-          this.selectedFiles[fieldKey] = null;
+    try {
+      const observable = await this.vehicleInspectionService.uploadPhotos(
+        this.valuationId,
+        this.vehicleNumber,
+        this.applicantContact,
+        payload,
+        { reportProgress: true, observe: 'events' }
+      );
+      observable.pipe(
+        finalize(() => {
+          this.isUploading[fieldKey] = false;
+        })
+      ).subscribe({
+        next: (event: HttpEvent<any>) => {
+          if (event.type === HttpEventType.UploadProgress && event.total) {
+            this.uploadProgress[fieldKey] = Math.round((100 * event.loaded) / event.total);
+          } else if (event.type === HttpEventType.Response) {
+            const body = event.body as { url: string };
+            this.uploadedUrls[fieldKey] = body.url;
+            this.uploadProgress[fieldKey] = 100;
+            this.selectedFiles[fieldKey] = null;
+          }
+        },
+        error: (err: HttpErrorResponse) => {
+          this.uploadError[fieldKey] = err.error?.message || 'Upload failed.';
         }
-      },
-      error: (err: HttpErrorResponse) => {
-        this.uploadError[fieldKey] = err.error?.message || 'Upload failed.';
-      }
-    });
+      });
+    } catch (err: any) {
+      this.isUploading[fieldKey] = false;
+      this.uploadError[fieldKey] = err?.message || 'Upload failed.';
+    }
   }
 
   getLabel(fieldKey: ImageKey): string {
     return this.imageFields.find(f => f.key === fieldKey)!.label;
+  }
+
+  openImage(url: string): void {
+    window.open(url, '_blank');
   }
 
   onBack(): void {

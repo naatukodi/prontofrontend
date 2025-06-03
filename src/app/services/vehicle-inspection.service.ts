@@ -15,16 +15,28 @@ private readonly baseUrl = environment.apiBaseUrl + 'valuations';
   constructor(private http: HttpClient, private workflowService: WorkflowService) {}
 
   // Add methods for vehicle image upload
-  uploadPhotos(
+  async uploadPhotos(
     valuationId: string,
     vehicleNumber: string,
     applicantContact: string,
     formData: FormData,
     options: any = {}
-  ): Observable<HttpEvent<any>> {
-    formData.append('valuationId', valuationId);
-    formData.append('vehicleNumber', vehicleNumber);
-    formData.append('applicantContact', applicantContact);
+  ): Promise<Observable<HttpEvent<any>>> {
+    // Compress images before appending to FormData
+    const compressedFormData = new FormData();
+    compressedFormData.append('valuationId', valuationId);
+    compressedFormData.append('vehicleNumber', vehicleNumber);
+    compressedFormData.append('applicantContact', applicantContact);
+
+    // Iterate through formData and compress images
+    for (const [key, value] of (formData as any).entries()) {
+      if (value instanceof File && value.type.startsWith('image/')) {
+        const compressedFile = await this.compressImage(value, 0.7); // 0.7 quality
+        compressedFormData.append(key, compressedFile, compressedFile.name);
+      } else if (typeof value === 'string') {
+        compressedFormData.append(key, value);
+      }
+    }
 
     const params = new HttpParams()
       .set('vehicleNumber', vehicleNumber)
@@ -32,9 +44,40 @@ private readonly baseUrl = environment.apiBaseUrl + 'valuations';
 
     return this.http.put<HttpEvent<any>>(
       `${this.baseUrl}/${valuationId}/photos`,
-      formData,
+      compressedFormData,
       { ...options, params, reportProgress: true, observe: 'events' }
     ).pipe(catchError(this.handleError));
+  }
+
+  // Helper function to compress an image file
+  private compressImage(file: File, quality: number): Promise<File> {
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onload = (event: any) => {
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          canvas.width = img.width;
+          canvas.height = img.height;
+          const ctx = canvas.getContext('2d');
+          ctx?.drawImage(img, 0, 0);
+          canvas.toBlob(
+            (blob) => {
+              if (blob) {
+                const compressedFile = new File([blob], file.name, { type: file.type });
+                resolve(compressedFile);
+              } else {
+                resolve(file);
+              }
+            },
+            file.type,
+            quality
+          );
+        };
+        img.src = event.target.result;
+      };
+      reader.readAsDataURL(file);
+    });
   }
 
   getVehicleImages(
