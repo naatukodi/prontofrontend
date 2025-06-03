@@ -1,90 +1,59 @@
-:host {
-    display: block;
-    padding: 16px;
-    background: #f5f5f5;
-    box-sizing: border-box;
-    /* center and constrain overall width */
-    max-width: 1400px;
-    margin: 0 auto;
+/* Make sure this selector matches the container you’re actually using. 
+   In your snippet, the div has class="workflow-buttons", so we target that. */
+
+.workflow-buttons {
+  display: flex;
+  flex-wrap: wrap;       /* ← allow buttons to wrap onto the next line when they don't fit */
+  gap: 0.5rem;           /* maintain the same gap you had inline: style="gap:0.5rem" */
+  margin: 1rem 0;        /* maintain your existing margin */
 }
 
-.dashboard-grid {
-    display: grid;
-    grid-template-columns: 1fr;  /* <-- always one column */
-    gap: 16px;
+/* Target each mat-button inside .workflow-buttons */
+.workflow-buttons button.mat-button {
+  background-color: lightgrey; /* default color; inline ngStyle will override active color */
+  color: black;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 12px;      /* enough padding for readability */
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  text-transform: none;
+  box-sizing: border-box;
+
+  /* Allow the text inside the button to wrap onto multiple lines if needed */
+  white-space: normal;
+  word-break: break-word;
+  text-align: center;     /* center‐align multi-line text */
+
+  /* Let each button grow/shrink, but never go below a min-width */
+  flex: 1 1 120px;        /* <-- “1 1 120px” means: flex-grow:1, flex-shrink:1, flex-basis:120px */
+  min-width: 80px;        /* they won’t shrink smaller than 80px */
+  max-width: 100%;        /* never exceed the container’s width */
+  transition: background-color 0.2s ease;
+}
+
+/* Hover state (optional) */
+.workflow-buttons button.mat-button:hover {
+  background-color: #d5d5d5;
+}
+
+/* Active button styling: inline ngStyle already sets background: green / color:white, 
+   so you only need this rule if you use a CSS class instead of inline ngStyle. 
+   If you still rely on [ngStyle], you can skip this block entirely. */
+.workflow-buttons button.mat-button.active-step {
+  background-color: #008000 !important;
+  color: #fff !important;
+}
+.workflow-buttons button.mat-button.active-step:hover {
+  background-color: #007300 !important;
+}
+
+/* ==== Responsive Tweak: below 600px, make font smaller and pair up buttons (2 per row) ==== */
+@media (max-width: 600px) {
+  .workflow-buttons button.mat-button {
+    font-size: 12px;
+    padding: 6px 8px;
+    flex: 1 1 45%;       /* each button tries to occupy ~45% of the row (two columns) */
   }
-  
-  .mat-expansion-panel {
-    width: 100%;      /* fill the column */
-    box-sizing: border-box;
-  }
-
-/* header styles */
-.mat-expansion-panel-header {
-    background-color: rgba(63,81,181,0.08);   /* light primary  */
-    color: #3f51b5;                            /* primary dark   */
-    font-weight: 500;
-    min-height: 48px;
-}
-
-/* add a little hover lift on the whole panel */
-.mat-expansion-panel:hover {
-    transform: translateY(-2px);
-    transition: transform 150ms ease-in-out;
-}
-
-/* section headings inside panels */
-section {
-    margin: 16px 0;
-
-    h4 {
-        font-size: 1.1rem;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        margin-bottom: 8px;
-        border-bottom: 1px solid rgba(0,0,0,0.12);
-        padding-bottom: 4px;
-    }
-
-    p, ul {
-        margin: 4px 0;
-        line-height: 1.5;
-    }
-}
-
-/* links to documents */
-a {
-    color: #009688;   /* accent/teal */
-    text-decoration: none;
-
-    &:hover {
-        text-decoration: underline;
-    }
-}
-
-/* loading & error states */
-.loading,
-.error {
-    text-align: center;
-    padding: 24px;
-}
-
-.error {
-    color: #f44336;
-}
-
-/* smaller tweaks for very narrow screens */
-@media (max-width: 480px) {
-    :host {
-        padding: 8px;
-    }
-    .dashboard-grid {
-        gap: 8px;
-    }
-}
-
-/* dashboard.component.scss */
-.workflow-tabs {
-  margin-top: 1rem;
-  margin-bottom: 1rem;
 }

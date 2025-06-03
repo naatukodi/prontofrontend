@@ -11,18 +11,18 @@
     </mat-expansion-panel-header>
 
     <!-- workflow buttons -->
-        <div class="workflow-buttons" style="display: flex; gap: 0.5rem; margin: 1rem 0;">
+    <div class="workflow-buttons">
       <button
         mat-button
         type="button"
         *ngFor="let step of steps; let i = index"
-       [ngStyle]="getStepIndex(v) === i
-         ? {'background-color':'green','color':'white'}
-         : {'background-color':'lightgrey','color':'black'}"
-      (click)="step === 'Stakeholder' && goToStakeholder(v)"
-      (click)="step === 'BackEnd' && goToValuation(v)"
-      (click)="step === 'AVO' && goToInspection(v)"
-      (click)="step === 'QC' && goToQualityControl(v)"
+        [ngStyle]="getStepIndex(v) === i
+          ? {'background-color':'green','color':'white'}
+          : {'background-color':'lightgrey','color':'black'}"
+        (click)="step === 'Stakeholder' && goToStakeholder(v)"
+        (click)="step === 'BackEnd' && goToValuation(v)"
+        (click)="step === 'AVO' && goToInspection(v)"
+        (click)="step === 'QC' && goToQualityControl(v)"
       >
         {{ step }}
       </button>
