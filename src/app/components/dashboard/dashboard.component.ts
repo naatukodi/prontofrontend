@@ -101,4 +101,17 @@ export class DashboardComponent implements OnInit {
       }
     );
   }
+
+  /** Navigate to the final report for this valuation */
+  goToFinalReport(v: Valuation) {
+    this.router.navigate(
+      ['/valuation', v.id, 'final-report'],
+      {
+        queryParams: {
+          vehicleNumber: v.vehicleNumber,
+          applicantContact: v.applicantContact
+        }
+      }
+    );
+  }
 }

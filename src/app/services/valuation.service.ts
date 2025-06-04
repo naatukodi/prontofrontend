@@ -6,6 +6,7 @@ import { catchError } from 'rxjs/operators';
 import { VehicleDetails } from '../models/VehicleDetails';
 import { WorkflowService } from '../services/workflow.service';
 import { environment } from '../../environments/environment';
+import { FinalReport } from '../models/final-report.model';
 
 @Injectable({
   providedIn: 'root'
@@ -72,5 +73,18 @@ private readonly baseUrl = environment.apiBaseUrl + 'valuations';
           return throwError(() => err);
         })
       );
+  }
+
+  getFinalReport(
+    valuationId: string,
+    vehicleNumber: string,
+    applicantContact: string
+  ): Observable<FinalReport> {
+    const params = new HttpParams()
+      .set('vehicleNumber', vehicleNumber)
+      .set('applicantContact', applicantContact);
+
+    const url = `${this.baseUrl}/${valuationId}/valuationresponse/FinalReport`;
+    return this.http.get<FinalReport>(url, { params });
   }
 }
