@@ -215,6 +215,19 @@
 
   <!-- Actions at Bottom -->
   <div class="actions">
-    <button mat-raised-button color="primary" (click)="onBack()">Back</button>
-  </div>
+  <button
+    mat-raised-button
+    color="primary"
+    class="back-button"
+    (click)="onBack()">
+    Back
+  </button>
+
+  <button
+    mat-raised-button
+    color="accent"
+    (click)="downloadPdf()">
+    Download PDF
+  </button>
+</div>
 </ng-container>

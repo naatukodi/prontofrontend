@@ -42,3 +42,18 @@
 img {
   cursor: pointer;
 }
+
+.actions {
+  display: flex;
+  align-items: center;
+
+  .back-button {
+    margin-right: 1rem; // space to the right of “Back”
+    padding: 0 1rem;    // left and right padding inside the button
+  }
+
+  .download-button {
+    margin-left: 1rem; // space to the left of “Download PDF”
+    padding: 0 1rem;   // left and right padding inside the button
+  }
+}

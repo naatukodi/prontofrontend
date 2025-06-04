@@ -4,6 +4,8 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ValuationService } from '../../../services/valuation.service';
 import { FinalReport, PhotoUrls } from '../../../models/final-report.model';
+import { environment } from '../../../../environments/environment';
+import { HttpParams } from '@angular/common/http';
 
 @Component({
   selector: 'app-final-report-view',
@@ -58,6 +60,17 @@ export class FinalReportComponent implements OnInit {
         },
       });
   }
+
+  downloadPdf(): void {
+  const url = `${environment.apiBaseUrl}/Valuations/${this.valuationId}/valuationresponse/FinalReport/pdf`;
+  const params = new HttpParams()
+    .set('vehicleNumber', this.vehicleNumber)
+    .set('applicantContact', this.applicantContact);
+
+  // Open in a new tab or trigger download
+  window.open(`${url}?${params.toString()}`, '_blank');
+}
+
 
   onBack(): void {
     this.router.navigate(['/valuation', this.valuationId], {
