@@ -23,21 +23,68 @@
   font-weight: 500;
 }
 
-/* The grid holding each image-card */
+/* The grid holding each image‐card */
 .grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 24px;
 }
 
-/* Individual card for each image field */
+/* Now .image-card is a label, filling its grid cell */
 .image-card {
+  position: relative;
   border: 1px solid rgba(0, 0, 0, 0.12);
   border-radius: 4px;
   padding: 12px;
   display: flex;
   flex-direction: column;
   align-items: center;
+  cursor: pointer;
+
+  /* =========================
+   Updated src/app/vehicle-image-upload/vehicle-image-upload.component.scss
+   (only the .image-card section has changed)
+   ========================= */
+.image-card {
+  position: relative;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 4px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+
+  /* 1) Make the <input> cover the card, but sit underneath buttons */
+  input[type='file'] {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+    z-index: 1; /* ↓ lower than buttons */
+  }
+
+  /* 2) All non-interactive visuals stay below buttons, above input */
+  .preview,
+  .label,
+  .progress-wrapper,
+  .field-error {
+    position: relative;
+    z-index: 1; /* sits above input but below buttons */
+    pointer-events: none;
+  }
+
+  /* 3) Explicitly put Upload & Open-Image buttons on top */
+  button,
+  .open-image-btn {
+    position: relative;
+    z-index: 2; /* ↑ higher than the input */
+    pointer-events: all;
+  }
+}
 }
 
 /* Preview area (either <img> or gray placeholder) */
@@ -48,6 +95,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  background: white;
 }
 
 .thumbnail {
@@ -75,6 +123,7 @@
   font-weight: 500;
   margin-bottom: 6px;
   text-align: center;
+  pointer-events: none; /* so taps pass through to input */
 }
 
 .optional {
@@ -84,15 +133,27 @@
   margin-left: 4px;
 }
 
-/* File input styling */
+/* Remove default bottom margin on file input (now positioned absolutely) */
 input[type='file'] {
-  margin-bottom: 8px;
+  margin: 0;
 }
 
 /* Upload button styling (uses Angular Material if available) */
 button[mat-raised-button] {
   margin-bottom: 8px;
   width: 100%;
+}
+
+/* “Open Image” button styling (non‐Material) */
+.open-image-btn {
+  margin-top: 8px;
+  background: transparent;
+  border: 1px solid #1976d2;
+  color: #1976d2;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  pointer-events: all; /* re‐enable clicks */
 }
 
 /* Progress bar container (only shown when uploading) */
@@ -104,6 +165,7 @@ button[mat-raised-button] {
   border-radius: 10px;
   overflow: hidden;
   margin-bottom: 6px;
+  pointer-events: none;
 }
 
 .progress-bar {
@@ -122,11 +184,20 @@ button[mat-raised-button] {
   font-weight: 600;
   font-size: 0.8rem;
   line-height: 20px;
+  pointer-events: none;
 }
 
-/* Per-field error message */
+/* Per‐field error message */
 .field-error {
   color: #d32f2f;
   font-size: 0.8rem;
   text-align: center;
+  margin-top: 4px;
+  pointer-events: none;
+}
+
+/* Back button area */
+.actions {
+  margin-top: 16px;
+  text-align: left;
 }

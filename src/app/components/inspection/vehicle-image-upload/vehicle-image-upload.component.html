@@ -1,10 +1,10 @@
 <!-- src/app/vehicle-image-upload/vehicle-image-upload.component.html -->
 
-    <app-workflow-buttons
-        [id]="valuationId"
-        [vehicleNumber]="vehicleNumber"
-        [applicantContact]="applicantContact">
-    </app-workflow-buttons>
+<app-workflow-buttons
+  [id]="valuationId"
+  [vehicleNumber]="vehicleNumber"
+  [applicantContact]="applicantContact">
+</app-workflow-buttons>
 
 <div class="upload-container">
   <h2>Vehicle Photo Upload</h2>
@@ -12,13 +12,12 @@
   <!-- Show a global error if route/query params are missing -->
   <div *ngIf="error" class="error">{{ error }}</div>
 
-
-
   <!-- Wait until we have valuationId, vehicleNumber, applicantContact -->
   <ng-container *ngIf="!error">
     <div class="grid">
       <ng-container *ngFor="let field of imageFields">
-        <div class="image-card">
+        <!-- Wrapping the entire card in a <label> so taps open the file picker -->
+        <label class="image-card" [for]="'input-' + field.key">
           <!-- 1) Preview or Placeholder -->
           <div class="preview">
             <ng-container *ngIf="uploadedUrls[field.key]; else placeholder">
@@ -35,19 +34,21 @@
             </ng-template>
           </div>
 
-          <!-- 2) Label -->
-          <div class="label">{{ field.label }} 
+          <!-- 2) Label text -->
+          <div class="label">
+            {{ field.label }}
             <span *ngIf="field.optional" class="optional">(optional)</span>
           </div>
 
-          <!-- 3) File Input -->
+          <!-- 3) Actual <input type="file"> sits on top, full size of the card -->
           <input
             type="file"
+            id="{{ 'input-' + field.key }}"
             accept="image/*"
             (change)="onFileSelected($event, field.key)"
           />
 
-          <!-- After: upload button disabled unless a new file is selected OR upload is in progress -->
+          <!-- 4) Upload button (still clickable because input is transparent) -->
           <button
             mat-raised-button
             color="primary"
@@ -56,11 +57,10 @@
               isUploading[field.key] ||
               !selectedFiles[field.key]
             "
-            (click)="uploadImage(field.key)"
+            (click)="uploadImage(field.key); $event.stopPropagation()"
           >
             {{ isUploading[field.key] ? 'Uploading…' : 'Upload' }}
           </button>
-
 
           <!-- 5) Per‐field Progress Bar -->
           <div
@@ -74,34 +74,29 @@
             <span>{{ uploadProgress[field.key] || 0 }}%</span>
           </div>
 
+          <!-- 6) “Open Image” button (only if there’s already an uploaded URL) -->
           <ng-container *ngIf="uploadedUrls[field.key]">
             <button
               type="button"
               class="open-image-btn"
-              (click)="openImage(uploadedUrls[field.key]!)"
-              style="margin-top: 8px;"
+              (click)="openImage(uploadedUrls[field.key]!); $event.stopPropagation()"
             >
               Open Image
             </button>
-            </ng-container>
+          </ng-container>
 
-          <!-- 6) Per‐field Error Message -->
-          <div
-            class="field-error"
-            *ngIf="uploadError[field.key]"
-          >
+          <!-- 7) Per‐field Error Message -->
+          <div class="field-error" *ngIf="uploadError[field.key]">
             {{ uploadError[field.key] }}
           </div>
-        </div>
+        </label>
       </ng-container>
     </div>
   </ng-container>
+
   <div class="actions">
-    <button
-      mat-raised-button
-      color="primary"
-      (click)="onBack()"
-    >
+    <button mat-raised-button color="primary" (click)="onBack()">
       Back
     </button>
+  </div>
 </div>

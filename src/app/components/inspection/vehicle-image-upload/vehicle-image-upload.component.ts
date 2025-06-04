@@ -2,7 +2,8 @@
 
 import {
   Component,
-  OnInit
+  OnInit,
+  ChangeDetectorRef
 } from '@angular/core';
 import {
   ActivatedRoute,
@@ -14,7 +15,7 @@ import {
   HttpErrorResponse
 } from '@angular/common/http';
 import { finalize } from 'rxjs/operators';
-import { VehicleInspectionService } from '../../../services/vehicle-inspection.service'; 
+import { VehicleInspectionService } from '../../../services/vehicle-inspection.service';
 
 type ImageKey =
   | 'frontLeftSide'
@@ -76,6 +77,7 @@ export class VehicleImageUploadComponent implements OnInit {
     { key: 'tiresAndRims',        label: 'Tires and Rims',            optional: false }
   ];
 
+  // Holds the File object once a user selects one
   selectedFiles: Record<ImageKey, File | null> = {
     frontLeftSide:      null,
     frontRightSide:     null,
@@ -98,6 +100,7 @@ export class VehicleImageUploadComponent implements OnInit {
     tiresAndRims:       null,
   };
 
+  // Holds the current (possibly timestamp‐busted) URLs for all keys
   uploadedUrls: Record<ImageKey, string | null> = {
     frontLeftSide:      null,
     frontRightSide:     null,
@@ -127,16 +130,19 @@ export class VehicleImageUploadComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private vehicleInspectionService: VehicleInspectionService
+    private vehicleInspectionService: VehicleInspectionService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
+    // 1) Grab route param “valuationId”
     this.valuationId = this.route.snapshot.paramMap.get('valuationId') || '';
     if (!this.valuationId) {
       this.error = 'Missing valuationId in route.';
       return;
     }
 
+    // 2) Grab query params vehicleNumber + applicantContact, then load existing images
     this.route.queryParamMap.subscribe(params => {
       const vn = params.get('vehicleNumber');
       const ac = params.get('applicantContact');
@@ -155,16 +161,16 @@ export class VehicleImageUploadComponent implements OnInit {
       .getVehicleImages(this.valuationId, this.vehicleNumber, this.applicantContact)
       .subscribe({
         next: (map: Record<string,string>) => {
+          // Normalize keys (“FrontLeftSide” → “frontLeftSide”) and assign
           Object.keys(map).forEach((key) => {
-            // Normalize “FrontLeftSide” → “frontLeftSide”
             const normalizedKey = key.charAt(0).toLowerCase() + key.slice(1);
             if ((this.uploadedUrls as any)[normalizedKey] !== undefined) {
               (this.uploadedUrls as any)[normalizedKey] = map[key];
             }
           });
+          this.cdr.detectChanges();
         },
         error: (err) => {
-          // 404 or other error: no existing images yet
           console.warn('No existing images or error fetching them', err);
         }
       });
@@ -187,22 +193,26 @@ export class VehicleImageUploadComponent implements OnInit {
     const formData = new FormData();
     const file = this.selectedFiles[fieldKey]!;
     formData.append(fieldKey, file, file.name);
-    formData.append('valuationId', this.valuationId);
-    formData.append('vehicleNumber', this.vehicleNumber);
-    formData.append('applicantContact', this.applicantContact);
+    formData.append('ValuationId', this.valuationId);
+    formData.append('VehicleNumber', this.vehicleNumber);
+    formData.append('ApplicantContact', this.applicantContact);
     return formData;
   }
 
   async uploadImage(fieldKey: ImageKey) {
     const isOptional = this.imageFields.find(f => f.key === fieldKey)!.optional;
+
+    // 1) If no file chosen & not optional → show error
     if (!this.selectedFiles[fieldKey] && !isOptional) {
       this.uploadError[fieldKey] = `Please select "${this.getLabel(fieldKey)}" image.`;
       return;
     }
+    // 2) If no new file but URL already exists → do nothing
     if (!this.selectedFiles[fieldKey] && this.uploadedUrls[fieldKey]) {
       return;
     }
 
+    // Reset progress & state for this key
     this.uploadProgress[fieldKey] = 0;
     this.isUploading[fieldKey] = true;
     this.uploadError[fieldKey] = undefined;
@@ -210,6 +220,7 @@ export class VehicleImageUploadComponent implements OnInit {
     const payload = this.buildSingleFormData(fieldKey);
 
     try {
+      // Call the PUT /photos endpoint, expecting a full Record<string,string> response
       const observable = await this.vehicleInspectionService.uploadPhotos(
         this.valuationId,
         this.vehicleNumber,
@@ -217,17 +228,43 @@ export class VehicleImageUploadComponent implements OnInit {
         payload,
         { reportProgress: true, observe: 'events' }
       );
+
       observable.pipe(
         finalize(() => {
           this.isUploading[fieldKey] = false;
         })
       ).subscribe({
         next: (event: HttpEvent<any>) => {
+          // a) Show progress bar if we get UploadProgress
           if (event.type === HttpEventType.UploadProgress && event.total) {
             this.uploadProgress[fieldKey] = Math.round((100 * event.loaded) / event.total);
-          } else if (event.type === HttpEventType.Response) {
-            const body = event.body as { url: string };
-            this.uploadedUrls[fieldKey] = body.url;
+          }
+          // b) On final response, event.body is the full map of all URLs
+          else if (event.type === HttpEventType.Response) {
+            const bodyMap = event.body as Record<string,string>;
+            console.log('Full upload response map:', bodyMap);
+
+            // 1) Normalize and merge each returned URL into uploadedUrls
+            Object.keys(bodyMap).forEach((returnedKey) => {
+              const normalizedKey = returnedKey.charAt(0).toLowerCase() + returnedKey.slice(1);
+              if ((this.uploadedUrls as any)[normalizedKey] !== undefined) {
+                // Cache‐bust by appending timestamp
+                const rawUrl = bodyMap[returnedKey];
+                const busted = `${rawUrl}?t=${new Date().getTime()}`;
+
+                // 1a) Clear out old URL first
+                (this.uploadedUrls as any)[normalizedKey] = null;
+                this.cdr.detectChanges();
+
+                // 1b) Wait one tick, then assign the busted URL
+                setTimeout(() => {
+                  (this.uploadedUrls as any)[normalizedKey] = busted;
+                  this.cdr.detectChanges();
+                }, 0);
+              }
+            });
+
+            // 2) Reset file selection and progress for this field
             this.uploadProgress[fieldKey] = 100;
             this.selectedFiles[fieldKey] = null;
           }
@@ -236,7 +273,8 @@ export class VehicleImageUploadComponent implements OnInit {
           this.uploadError[fieldKey] = err.error?.message || 'Upload failed.';
         }
       });
-    } catch (err: any) {
+    }
+    catch (err: any) {
       this.isUploading[fieldKey] = false;
       this.uploadError[fieldKey] = err?.message || 'Upload failed.';
     }
