@@ -20,9 +20,9 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 
-import { ValuationFormComponent } from './components/valuation-form/valuation-form.component';
-import { StakeholderUpdateComponent } from './components/stakeholder-update/stakeholder-update.component';
-import { StakeholderViewComponent } from './components/stakeholder-view/stakeholder-view.component';
+import { ValuationFormComponent } from './components/valution/valuation-form/valuation-form.component';
+import { StakeholderUpdateComponent } from './components/stakeholder/stakeholder-update/stakeholder-update.component';
+import { StakeholderViewComponent } from './components/stakeholder/stakeholder-view/stakeholder-view.component';
 import { ValuationVehicleDetailsComponent } from './components/valution/valuation-vehicle-details/valuation-vehicle-details.component';
 import { ValuationUpdateComponent } from './components/valution/valuation-update/valuation-update.component';
 import { InspectionViewComponent } from './components/inspection/inspection-view/inspection-view.component';
@@ -31,9 +31,11 @@ import { QualityControlViewComponent } from './components/qc/quality-control-vie
 import { QualityControlUpdateComponent } from './components/qc/quality-control-update/quality-control-update.component';
 import { WorkflowButtonsComponent } from './components/nav/workflow-buttons/workflow-buttons.component';
 import { VehicleImageUploadComponent } from './components/inspection/vehicle-image-upload/vehicle-image-upload.component';
+import { StakeholderNewComponent } from './components/stakeholder/stakeholder-new/stakeholder-new.component';
+import { FinalReportComponent } from './components/Report/final-report/final-report.component';
 
 @NgModule({
-  declarations: [AppComponent, DashboardComponent, ValuationFormComponent, StakeholderUpdateComponent, StakeholderViewComponent, ValuationVehicleDetailsComponent, ValuationUpdateComponent, InspectionViewComponent, InspectionUpdateComponent, QualityControlViewComponent, QualityControlUpdateComponent, WorkflowButtonsComponent, VehicleImageUploadComponent],
+  declarations: [AppComponent, DashboardComponent, ValuationFormComponent, StakeholderUpdateComponent, StakeholderViewComponent, ValuationVehicleDetailsComponent, ValuationUpdateComponent, InspectionViewComponent, InspectionUpdateComponent, QualityControlViewComponent, QualityControlUpdateComponent, WorkflowButtonsComponent, VehicleImageUploadComponent, StakeholderNewComponent, FinalReportComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,

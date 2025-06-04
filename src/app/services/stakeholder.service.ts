@@ -52,6 +52,22 @@ private base = `${environment.apiBaseUrl}/Valuations`;
     );
   }
 
+  newStakeholder(
+  valuationId: string,
+  vehicleNumber: string,
+  applicantContact: string,
+  body: any
+): Observable<any> {
+  const qp = new HttpParams()
+    .set('vehicleNumber', vehicleNumber)
+    .set('applicantContact', applicantContact);
+
+  return this.http.put(
+    `${this.base}/${valuationId}/stakeholder`,
+     body
+  );
+}
+
   startWorkflow(valuationId: string, stepOrder: number, vehicleNumber: string, applicantContact: string): Observable<void> {
     return this.http.post<void>(
       `${this.base}/${valuationId}/workflow/${stepOrder}/start?vehicleNumber=${vehicleNumber}&applicantContact=${applicantContact}`,

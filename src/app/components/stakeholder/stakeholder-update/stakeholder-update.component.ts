@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router }   from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { StakeholderService } from '../../services/stakeholder.service';
+import { StakeholderService } from '../../../services/stakeholder.service';
 import { Observable } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
-import { WorkflowService } from '../../services/workflow.service';
-import { ValuationService } from '../../services/valuation.service'; // Import if needed for other services
+import { WorkflowService } from '../../../services/workflow.service';
+import { ValuationService } from '../../../services/valuation.service'; // Import if needed for other services
 
 @Component({
   selector: 'app-stakeholder-update',

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { StakeholderService } from '../../services/stakeholder.service';
+import { StakeholderService } from '../../../services/stakeholder.service';
 
 @Component({
   selector: 'app-stakeholder-view',

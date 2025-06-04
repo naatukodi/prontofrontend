@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { ClaimService } from '../../services/claim.service';
-import { Valuation } from '../../models/claim.model';
+import { ClaimService } from '../../../services/claim.service';
+import { Valuation } from '../../../models/claim.model';
 
 @Component({
   selector: 'app-valuation-form',
